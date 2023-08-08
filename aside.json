@@ -1,0 +1,15 @@
+{
+    "data": [
+        { "title": "Bảng Điều Khiển", "link": "dashboard", "icon": "home" },
+        { "title": "Danh Mục", "link": "category", "icon": "align-justify" },
+        { "title": "Bài Viết", "link": "post", "icon": "box" },
+        { "title": "Menu", "link": "menu", "icon": "align-left" },
+        { "title": "Chia Sẻ Kèo", "link": "share", "icon": "share-2" },
+        { "title": "Khóa Học", "link": "course", "icon": "book" },
+        { "title": "Cấu Hình Site", "link": "site", "icon": "settings" },
+        { "title": "Cài Đặt Mail", "link": "mail", "icon": "mail" },
+        { "title": "Mạng Xã Hội", "link": "network", "icon": "share-2" },
+        { "title": "Liên Hệ", "link": "contact", "icon": "phone-call" },
+        { "title": "Thành Viên", "link": "user", "icon": "users" }
+    ]
+}
