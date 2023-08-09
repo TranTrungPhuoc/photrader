@@ -1,24 +1,18 @@
 const Controllers = require('../helpers/Controllers')
-const Html = require('../helpers/Html')
 const User_Models = require('../models/User_Models')
-
 class User_Controllers extends Controllers{
     constructor(req, res){
         super(req, res)
         this.model = User_Models
-        this.formList = this.list()
+        this.formList = this.arrayForm()
     }
-    list(){
-        const array = [
-            { title: 'Email', col: 6, class: 'email', id: 'email', value:'', placeholder: 'Email', require: true },
-            { title: 'Điện Thoại', col: 6, class: 'phone', id: 'phone', value:'', placeholder: 'phone', require: false },
-            { title: 'Mật Khẩu', col: 6, class: 'password', id: 'password', value:'', placeholder: 'Mật Khẩu', require: true },
-        ]
-        let str='';
-        for (let index = 0; index < array.length; index++) {
-            str+=Html.div('col-md-'+array[index].col, Html.div('form-group fill', Html.label(array[index].title,'form-label') + Html.input('text', array[index].class, array[index].id, array[index].value, array[index].placeholder)))
-        }
-        return str;
+    arrayForm(){
+        return [
+            { title: 'Email', type: 'email', col: 6, class: 'email', id: 'email', value:'', placeholder: 'Email', require: true },
+            { title: 'Điện Thoại', type: 'tel', col: 6, class: 'phone', id: 'phone', value:'', placeholder: 'Điện Thoại', require: false },
+            { title: 'Mật Khẩu', type: 'password', col: 6, class: 'password', id: 'password', value:'', placeholder: 'Mật Khẩu', require: true },
+            { title: 'Xác Nhận Mật Khẩu', type: 'password', col: 6, class: 're_password', id: 're_password', value:'', placeholder: 'Xác Nhận Mật Khẩu', require: true },
+        ];
     }
 }
 module.exports = User_Controllers

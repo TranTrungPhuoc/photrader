@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 
-const admin = process.env.ADMIN
 const prefix = process.env.ROUTER_PREFIX
 
 router.use('/login', require('../routers/Login_' + prefix))

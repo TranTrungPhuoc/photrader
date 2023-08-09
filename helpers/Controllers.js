@@ -1,5 +1,7 @@
 const Html = require('./Html')
 const fs = require('fs');
+const bcrypt = require('bcryptjs');
+const salt = bcrypt.genSaltSync(10);
 class Controllers{
     constructor(req, res, model, formList){
         this.req = req
@@ -9,10 +11,26 @@ class Controllers{
     }
     async index(){
         const getList = await this.model.getList()
-        return this.res.render('index', {aside: this.aside(), main: this.main(getList,this.convertModule(this.module()))})
+        return this.res.render('index', {aside: this.aside(), module: this.params(2), main: this.main(getList,this.convertModule(this.params(2)))})
     }
-    form(){
-        return this.res.render('index', {aside: this.aside(), main: this.main(this.formList,this.convertModule(this.module()))})
+    configFormList(){
+        const array = this.formList
+        let str='';
+        for (let index = 0; index < array.length; index++) {
+            str+=Html.div('col-md-'+array[index].col, Html.div('form-group fill', Html.label(array[index].title,'form-label') + Html.input(array[index].type, array[index].class, array[index].id, array[index].value, array[index].placeholder)))
+        }
+        return str;
+    }
+    form(){ return this.res.render('index', {aside: this.aside(), module: this.params(2), main: this.main(this.configFormList(),this.convertModule(this.params(2)))}) }
+    async process(){
+        if(this.req.body['re_password']!=undefined) delete this.req.body['re_password'];
+        if(this.req.body['password']!=undefined) this.req.body['password'] = bcrypt.hashSync(this.req.body['password'], salt);
+        if(this.req.body['email']!=undefined){
+            const getData = await this.model.getDetail({email: this.req.body['email']})
+            if(getData.length!=0) return this.res.send({error: 'Email đã tồn tại!'})
+        }
+        const data = await this.model.create(this.req.body)
+        return this.res.send(data)
     }
     convertModule(key=''){
         let str='';
@@ -24,12 +42,7 @@ class Controllers{
         }
         return str;
     }
-    module(){
-        return this.req.originalUrl.split('/')[2]
-    }
-    page(){
-        return this.req.originalUrl.split('/')[3]
-    }
+    params(so){ return this.req.originalUrl.split('/')[so] }
     aside(){
         const array = JSON.parse(fs.readFileSync('aside.json')).data;
         let str='';
@@ -40,37 +53,30 @@ class Controllers{
     }
     breadcrumb(){
         const array=[
-            {title: 'Bảng Điều Khiển', link: 'dashboard'},
-            {title: this.convertModule(this.module()), link: this.module()},
-            {title: (this.page()=='index'?'Bảng Dữ Liệu': 'Form'), link: ''}
+            {title: Html.icon('home'), link: 'dashboard'},
+            {title: this.convertModule(this.params(2)), link: this.params(2)},
+            {title: (this.params(3)=='index'?'Bảng Dữ Liệu': 'Form'), link: ''}
         ]
         let str='';
         for (let index = 0; index < array.length; index++) {
             str += Html.li(array[index].title, (array[index].link)? '/admin/' + array[index].link + '/index': '', array[index].icon, 'breadcrumb-item');
         }
         return Html.div('page-header', Html.div('page-block', Html.div('row align-items-center', 
-            Html.div('col-md-12', Html.div('page-header-title', Html.h5(this.convertModule(this.module()),'m-b-10')) + Html.ul(str, 'breadcrumb'))))
+            Html.div('col-md-12', Html.div('page-header-title', Html.h5(this.convertModule(this.params(2)),'m-b-10')) + Html.ul(str, 'breadcrumb'))))
         )
     }
     table(array=[], _class='table table-striped'){ return '<table class="'+_class+'">'+this.thead(array) + this.tbody(array) +'</table>';}
-    formDiv(array=[]){
-        return Html.div('card-body', Html.form(Html.div('row', array)));
-    }
     content(array){
-        return Html.div('row', Html.div('col-xl-12', 
-            Html.div('card', 
-            (
-                this.page()=='index'? (
+        return Html.div('row', Html.div('col-xl-12',
+            Html.div('card', (
+                this.params(3)=='index'? (
                     Html.div('card-header', Html.h5('User')) + 
                     Html.div('card-body table-border-style', Html.div('table-responsive', Html.table(array)))
                 )
-                :
-                Html.div('card-body', this.formDiv(array))
+                : Html.div('card-body', Html.div('card-body', Html.form(Html.div('row', array) + Html.submit())))
             )
         )))
     }
-    main(array=[]){
-        return Html.section('pcoded-main-container', Html.div('pcoded-content', this.breadcrumb() + this.content(array)));
-    }
+    main(array=[]){ return Html.section('pcoded-main-container', Html.div('pcoded-content', this.breadcrumb() + this.content(array))); }
 }
 module.exports = Controllers

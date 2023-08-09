@@ -52,3 +52,17 @@
         }
     }
 </script> -->
+
+<script>
+    $(document).ready(function(){
+        $('#formData').on('submit', function(e){
+            e.preventDefault()
+            const array = $('form').serializeArray()
+            const data = {}
+            for (let index = 0; index < array.length; index++) {
+                data[array[index].name] = array[index].value
+            }
+            $.ajax({ url: '/admin/<%-module%>/process', type: 'POST', data, success: function(results){ console.log(results); } })
+        })
+    })
+</script>
