@@ -3,25 +3,33 @@ const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
 class Controllers{
-    constructor(req, res, model, formList){
+    constructor(req, res, model, formList, theadList, tbodyList){
         this.req = req
         this.res = res
         this.model = model
         this.formList = formList
+        this.theadList = theadList
+        this.tbodyList = tbodyList
     }
     async index(){
-        const getList = await this.model.getList()
-        return this.res.render('index', {aside: this.aside(), module: this.params(2), main: this.main(getList,this.convertModule(this.params(2)))})
+        return this.res.render('index', {
+            aside: this.aside(), 
+            module: this.params(2), 
+            main: await this.main()
+        })
     }
     configFormList(){
         const array = this.formList
         let str='';
         for (let index = 0; index < array.length; index++) {
-            str+=Html.div('col-md-'+array[index].col, Html.div('form-group fill', Html.label(array[index].title,'form-label') + Html.input(array[index].type, array[index].class, array[index].id, array[index].value, array[index].placeholder)))
+            str+=Html.div('col-md-'+array[index].col, 
+                Html.div('form-group fill', 
+                    Html.label(array[index].title,'form-label') + 
+                    Html.input(array[index].type, array[index].class, array[index].id, array[index].value, array[index].placeholder)))
         }
         return str;
     }
-    form(){ return this.res.render('index', {aside: this.aside(), module: this.params(2), main: this.main(this.configFormList(),this.convertModule(this.params(2)))}) }
+    async form(){ return this.res.render('index', {aside: this.aside(), module: this.params(2), main: await this.main(this.configFormList())}) }
     async process(){
         if(this.req.body['re_password']!=undefined) delete this.req.body['re_password'];
         if(this.req.body['password']!=undefined) this.req.body['password'] = bcrypt.hashSync(this.req.body['password'], salt);
@@ -47,7 +55,7 @@ class Controllers{
         const array = JSON.parse(fs.readFileSync('aside.json')).data;
         let str='';
         for (let index = 0; index < array.length; index++) {
-            str += Html.li(array[index].title, '/admin/' + array[index].link + '/index', array[index].icon, 'pcoded-micon');
+            str += Html.li(Html.span('pcoded-micon',Html.icon(array[index].icon)) + array[index].title, '/admin/' + array[index].link + '/index');
         }
         return Html.ul(str)
     }
@@ -65,18 +73,22 @@ class Controllers{
             Html.div('col-md-12', Html.div('page-header-title', Html.h5(this.convertModule(this.params(2)),'m-b-10')) + Html.ul(str, 'breadcrumb'))))
         )
     }
-    table(array=[], _class='table table-striped'){ return '<table class="'+_class+'">'+this.thead(array) + this.tbody(array) +'</table>';}
-    content(array){
+    async theadCommon(){
+        const array = await this.theadList
+        let th=''; for (let index = 0; index < array.length; index++) { th+=Html.th(array[index]) }
+        return Html.thead(Html.tr(th))
+    }
+    async content(array){
         return Html.div('row', Html.div('col-xl-12',
             Html.div('card', (
                 this.params(3)=='index'? (
-                    Html.div('card-header', Html.h5('User')) + 
-                    Html.div('card-body table-border-style', Html.div('table-responsive', Html.table(array)))
+                    Html.div('card-header', Html.h5(Html.a(Html.icon('plus') + ' Thêm','/admin/'+this.params(2)+'/add','btn btn-outline-primary has-ripple'))) + 
+                    Html.div('card-body table-border-style', Html.div('table-responsive', Html.table(await this.theadCommon(),await this.tbodyList)))
                 )
                 : Html.div('card-body', Html.div('card-body', Html.form(Html.div('row', array) + Html.submit())))
             )
         )))
     }
-    main(array=[]){ return Html.section('pcoded-main-container', Html.div('pcoded-content', this.breadcrumb() + this.content(array))); }
+    async main(array=[]){ return Html.section('pcoded-main-container', Html.div('pcoded-content', this.breadcrumb() + await this.content(array))); }
 }
 module.exports = Controllers
