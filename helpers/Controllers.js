@@ -2,6 +2,7 @@ const Html = require('./Html')
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
+const moment = require('moment')
 class Controllers{
     constructor(req, res, model, formList, theadList, tbodyList){
         this.req = req
@@ -89,6 +90,7 @@ class Controllers{
             )
         )))
     }
+    convertDate(value){ const date = moment(value); return date.format('DD')+'/'+date.format('MM')+'/'+date.format('YYYY') }
     async main(array=[]){ return Html.section('pcoded-main-container', Html.div('pcoded-content', this.breadcrumb() + await this.content(array))); }
 }
 module.exports = Controllers

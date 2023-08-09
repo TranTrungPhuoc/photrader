@@ -22,7 +22,7 @@ class User_Controllers extends Controllers{
         let td='';
         for (let index = 0; index < array.length; index++) {
             td+=Html.td(array[index]['email'])
-            td+=Html.td(array[index]['created'], 'text-center')
+            td+=Html.td(this.convertDate(array[index]['created']), 'text-center')
             td+=Html.td(Html.input('checkbox'), 'text-center')
             td+=Html.td(
                 Html.a(Html.icon('edit'),'/admin/'+this.params(2)+'/edit/'+array[index]['_id'],'btn btn-sm btn-outline-info has-ripple') + '&nbsp;' +
