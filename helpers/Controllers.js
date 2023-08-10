@@ -26,7 +26,7 @@ class Controllers{
             str+=Html.div('col-md-'+array[index].col, 
                 Html.div('form-group fill', 
                     Html.label(array[index].title,'form-label') + 
-                    Html.input(array[index].type, array[index].class, array[index].id, array[index].value, array[index].placeholder)))
+                    Html.input(array[index].type, array[index].class, array[index].id, array[index].value, array[index].placeholder, array[index].require)))
         }
         return str;
     }
@@ -39,7 +39,7 @@ class Controllers{
             if(getData.length!=0) return this.res.send({error: 'Email đã tồn tại!'})
         }
         const data = await this.model.create(this.req.body)
-        return this.res.send(data)
+        return this.res.send('Success')
     }
     convertModule(key=''){
         let str='';
@@ -86,7 +86,7 @@ class Controllers{
                     Html.div('card-header', Html.h5(Html.a(Html.icon('plus') + ' Thêm','/admin/'+this.params(2)+'/add','btn btn-outline-primary has-ripple'))) + 
                     Html.div('card-body table-border-style', Html.div('table-responsive', Html.table(await this.theadCommon(),await this.tbodyList)))
                 )
-                : Html.div('card-body', Html.div('card-body', Html.form(Html.div('row', array) + Html.submit())))
+                : Html.div('card-body', Html.div('card-body', Html.form(Html.div('row', array) + Html.div('',Html.submit() + '&nbsp;' + Html.a('Thoát','/admin/'+this.params(2)+'/index', 'btn btn-outline-secondary has-ripple')) + Html.div('image d-none', '<br/>' + Html.image('','/assets/images/loading.gif')))))
             )
         )))
     }

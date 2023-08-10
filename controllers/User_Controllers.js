@@ -19,8 +19,9 @@ class User_Controllers extends Controllers{
     }
     async arrayBody(){
         const array = await this.model.getList()
-        let td='';
+        let tr='';
         for (let index = 0; index < array.length; index++) {
+            let td='';
             td+=Html.td(array[index]['email'])
             td+=Html.td(this.convertDate(array[index]['created']), 'text-center')
             td+=Html.td(Html.input('checkbox'), 'text-center')
@@ -29,8 +30,9 @@ class User_Controllers extends Controllers{
                 Html.button(Html.icon('trash'),'btn btn-sm btn-outline-danger has-ripple'), 
                 'text-center'
             )
+            tr+=Html.tr(td)
         }
-        return Html.tbody(Html.tr(td))
+        return Html.tbody(tr)
     }
     arrayThead(){
         return ['Tên', 'Ngày Tạo', 'Hiển Thị', 'Chức Năng']

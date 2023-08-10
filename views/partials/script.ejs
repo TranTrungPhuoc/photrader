@@ -62,7 +62,18 @@
             for (let index = 0; index < array.length; index++) {
                 data[array[index].name] = array[index].value
             }
-            $.ajax({ url: '/admin/<%-module%>/process', type: 'POST', data, success: function(results){ console.log(results); } })
+            $.ajax({ 
+                url: '/admin/<%-module%>/process', 
+                type: 'POST', 
+                beforeSend: function(){ $('.image').show() },
+                data, success: function(results){ 
+                    $('.image').hide()
+                    if(results=='Success'){
+                        alert('Thêm thành công !!!')
+                        window.location.href = '/admin/<%-module%>/index'
+                    } 
+                } 
+            })
         })
     })
 </script>

@@ -16,11 +16,11 @@ class Html{
 
     // form
     form(value='', id='formData'){ return '<form id="'+id+'">'+value+'</form>'; }
-    input(type='text', _class='', id='', value='', placeholder=''){ return '<input type="'+type+'" class="'+_class+'" id="'+id+'" name="'+id+'" value="'+value+'" placeholder="'+placeholder+'" />';}
+    input(type='text', _class='', id='', value='', placeholder='', require=false){ return '<input type="'+type+'" class="'+_class+'" id="'+id+'" name="'+id+'" value="'+value+'" placeholder="'+placeholder+'" '+(require==true?'required':'')+' />';}
     option(value='', name=''){ return '<option value="'+value+'">' + name + '</option>'; }
     select(array=[], _class='', id=''){let str=''; for (let index = 0; index < array.length; index++) { str+=this.option(array[index]['value'], array[index]['name'])} return '<select class="'+_class+'" id="'+id+'">' + str + '</select>'; }
     textarea(rows=3, value='', _class='', id=''){ return '<textarea rows="'+rows+'" class="'+_class+'" id="'+id+'">' + value + '</textarea>'; }
-    submit(_class='btn-primary'){ return '<hr /><button type="submit" class="btn '+_class+'">Lưu</button>'; }
+    submit(_class='btn-outline-primary has-ripple'){ return '<br /><button type="submit" class="btn '+_class+'">Lưu</button>'; }
     button(value='',_class=''){ return '<button type="button" class="btn '+_class+'">'+value+'</button>'; }
     label(name='', _class=''){ return '<label class="'+_class+'">'+name+'</label>'; }
 
@@ -35,6 +35,8 @@ class Html{
     span(_class='', value=''){ return '<span class="'+_class+'">'+value+'</span>'; }
     icon(_class=''){ return '<i class="feather icon-'+_class+'"></i>'; }
     div(_class='', value=''){ return '<div class="'+_class+'">' +value+ '</div>'; }
+    p(_class='', value=''){ return '<p class="'+_class+'">' +value+ '</p>'; }
     section(_class='', value=''){ return '<section class="'+_class+'">' +value+ '</section>'; }
+    image(_class='image', src=''){ return '<img src="'+src+'" class="'+_class+'" />'; }
 }
 module.exports = new Html
