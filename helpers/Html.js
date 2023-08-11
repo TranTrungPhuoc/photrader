@@ -9,7 +9,7 @@ class Html{
     // table
     td(value, _class=''){ return '<td class="'+_class+'">' + value +'</td>'; }
     th(value, _class='text-center'){ return '<th class="'+_class+'">' + value +'</th>'; }
-    tr(value=[]){ return '<tr>' + value + '</tr>';}
+    tr(value=[], id=''){ return '<tr id="tr_'+id+'">' + value + '</tr>';}
     thead(value=[]){ return '<thead>'+value+'</thead>'; }
     tbody(value=[]){ return '<tbody>'+value+'</tbody>'; }
     table(thead='', tbody='', _class='table table-striped'){ return '<table class="'+_class+'">'+thead + tbody +'</table>';}
@@ -21,7 +21,7 @@ class Html{
     select(array=[], _class='', id=''){let str=''; for (let index = 0; index < array.length; index++) { str+=this.option(array[index]['value'], array[index]['name'])} return '<select class="'+_class+'" id="'+id+'">' + str + '</select>'; }
     textarea(rows=3, value='', _class='', id=''){ return '<textarea rows="'+rows+'" class="'+_class+'" id="'+id+'">' + value + '</textarea>'; }
     submit(_class='btn-outline-primary has-ripple'){ return '<br /><button type="submit" class="btn '+_class+'">Lưu</button>'; }
-    button(value='',_class=''){ return '<button type="button" class="btn '+_class+'">'+value+'</button>'; }
+    button(value='',_class='', _add='', _event=''){ return '<button type="button" class="btn '+_class+'" '+_add+' onclick="'+_event+'">'+value+'</button>'; }
     label(name='', _class=''){ return '<label class="'+_class+'">'+name+'</label>'; }
 
     // link
@@ -38,5 +38,7 @@ class Html{
     p(_class='', value=''){ return '<p class="'+_class+'">' +value+ '</p>'; }
     section(_class='', value=''){ return '<section class="'+_class+'">' +value+ '</section>'; }
     image(_class='image', src=''){ return '<img src="'+src+'" class="'+_class+'" />'; }
+    spiner(_color=''){ return '<div class="spinner-border '+_color+'" role="status"> <span class="sr-only">Loading...</span> </div>'; }
+    switch(id, checked=''){ return this.div('switch d-inline', '<input type="checkbox" '+checked+' class="switcher-input" name="validation-switcher" id="switch-'+id+'" onChange="status('+"'"+id+"'"+')"><label for="switch-'+id+'" class="cr"></label>') }
 }
 module.exports = new Html

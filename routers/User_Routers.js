@@ -5,4 +5,6 @@ router.get('/index', (req, res) => new User_Controllers(req, res).index())
 router.get('/add', (req, res) => new User_Controllers(req, res).form())
 router.get('/edit/:id', (req, res) => new User_Controllers(req, res).form())
 router.post('/process', (req, res) => new User_Controllers(req, res).process())
+router.post('/delete', (req, res) => new User_Controllers(req, res).delete())
+router.post('/status', (req, res) => new User_Controllers(req, res).status())
 module.exports=router

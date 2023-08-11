@@ -24,13 +24,13 @@ class User_Controllers extends Controllers{
             let td='';
             td+=Html.td(array[index]['email'])
             td+=Html.td(this.convertDate(array[index]['created']), 'text-center')
-            td+=Html.td(Html.input('checkbox'), 'text-center')
+            td+=Html.td(Html.switch(array[index]['_id'], (array[index]['status']==true?'checked':'')), 'text-center')
             td+=Html.td(
                 Html.a(Html.icon('edit'),'/admin/'+this.params(2)+'/edit/'+array[index]['_id'],'btn btn-sm btn-outline-info has-ripple') + '&nbsp;' +
-                Html.button(Html.icon('trash'),'btn btn-sm btn-outline-danger has-ripple'), 
+                Html.button(Html.icon('trash'),'btn btn-sm btn-outline-danger has-ripple', ' data-bs-toggle="modal" data-bs-target="#deleteModal"', "popupDelete('"+array[index]['_id']+"', '"+array[index]['email']+"')"), 
                 'text-center'
             )
-            tr+=Html.tr(td)
+            tr+=Html.tr(td,array[index]['_id'])
         }
         return Html.tbody(tr)
     }

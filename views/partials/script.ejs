@@ -54,6 +54,31 @@
 </script> -->
 
 <script>
+    function status(id) {
+        const status = $('#switch-'+id).prop('checked')
+        $.ajax({
+            url: '/admin/<%-module%>/status',
+            type: 'POST',
+            data: {id, status},
+            success: function(results){} 
+        })
+    }
+    function popupDelete(id,name) {
+        $('#deleteText').text(name)
+        $('#deleteId').val(id)
+    }
+    function deleteRow() {
+        const id =$('#deleteId').val()
+        $.ajax({
+            url: '/admin/<%-module%>/delete',
+            type: 'POST',
+            data: {id},
+            success: function(results){
+                $('.loading').hide()
+                $('#tr_'+id).remove()
+            } 
+        })
+    }
     $(document).ready(function(){
         $('#formData').on('submit', function(e){
             e.preventDefault()
@@ -62,13 +87,13 @@
             for (let index = 0; index < array.length; index++) {
                 data[array[index].name] = array[index].value
             }
-            $.ajax({ 
-                url: '/admin/<%-module%>/process', 
-                type: 'POST', 
-                beforeSend: function(){ $('.image').show() },
-                data, success: function(results){ 
-                    $('.image').hide()
-                    if(results=='Success'){
+            $.ajax({
+                url: '/admin/<%-module%>/process',
+                type: 'POST',
+                beforeSend: function(){ $('.loading').show() },
+                data, success: function(results){
+                    $('.loading').hide()
+                    if(results.code==200){
                         alert('Thêm thành công !!!')
                         window.location.href = '/admin/<%-module%>/index'
                     } 

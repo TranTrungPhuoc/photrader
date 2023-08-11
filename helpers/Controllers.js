@@ -2,7 +2,8 @@ const Html = require('./Html')
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
-const moment = require('moment')
+const moment = require('moment');
+const { default: mongoose } = require('mongoose');
 class Controllers{
     constructor(req, res, model, formList, theadList, tbodyList){
         this.req = req
@@ -38,8 +39,19 @@ class Controllers{
             const getData = await this.model.getDetail({email: this.req.body['email']})
             if(getData.length!=0) return this.res.send({error: 'Email đã tồn tại!'})
         }
-        const data = await this.model.create(this.req.body)
-        return this.res.send('Success')
+        await this.model.create(this.req.body)
+        return this.res.send({code: 200})
+    }
+    async delete(){
+        await this.model.delete({_id: new mongoose.Types.ObjectId(this.req.body.id)})
+        return this.res.send({code: 200})
+    }
+    async status(){
+        await this.model.update({
+            _id: new mongoose.Types.ObjectId(this.req.body.id)}, 
+            {status: this.req.body.status, updated: new Date()}
+        )
+        return this.res.send({code: 200})
     }
     convertModule(key=''){
         let str='';
@@ -86,7 +98,7 @@ class Controllers{
                     Html.div('card-header', Html.h5(Html.a(Html.icon('plus') + ' Thêm','/admin/'+this.params(2)+'/add','btn btn-outline-primary has-ripple'))) + 
                     Html.div('card-body table-border-style', Html.div('table-responsive', Html.table(await this.theadCommon(),await this.tbodyList)))
                 )
-                : Html.div('card-body', Html.div('card-body', Html.form(Html.div('row', array) + Html.div('',Html.submit() + '&nbsp;' + Html.a('Thoát','/admin/'+this.params(2)+'/index', 'btn btn-outline-secondary has-ripple')) + Html.div('image d-none', '<br/>' + Html.image('','/assets/images/loading.gif')))))
+                : Html.div('card-body', Html.div('card-body', Html.form(Html.div('row', array) + Html.div('',Html.submit() + '&nbsp;' + Html.a('Thoát','/admin/'+this.params(2)+'/index', 'btn btn-outline-secondary has-ripple')) + Html.div('loading', '<br/>' + Html.spiner()))))
             )
         )))
     }
