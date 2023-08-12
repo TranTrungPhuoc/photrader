@@ -18,7 +18,10 @@ class User_Controllers extends Controllers{
         ];
     }
     async arrayBody(){
-        const array = await this.model.getList()
+        const limit = this.getNumber(this.req.query.limit, process.env.LIMIT)
+        const page = this.getNumber(this.req.query.page, 0)
+        const skip = (page==1 || page==0) ? 0 : (page-1)*limit
+        const array = await this.model.getList(this.search('email'), '', limit, skip)
         let tr='';
         for (let index = 0; index < array.length; index++) {
             let td='';

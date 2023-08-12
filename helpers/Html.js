@@ -20,7 +20,7 @@ class Html{
     option(value='', name=''){ return '<option value="'+value+'">' + name + '</option>'; }
     select(array=[], _class='', id=''){let str=''; for (let index = 0; index < array.length; index++) { str+=this.option(array[index]['value'], array[index]['name'])} return '<select class="'+_class+'" id="'+id+'">' + str + '</select>'; }
     textarea(rows=3, value='', _class='', id=''){ return '<textarea rows="'+rows+'" class="'+_class+'" id="'+id+'">' + value + '</textarea>'; }
-    submit(_class='btn-outline-primary has-ripple'){ return '<br /><button type="submit" class="btn '+_class+'">Lưu</button>'; }
+    submit(_class='', value=''){ return '<button type="submit" class="'+_class+'">'+value+'</button>'; }
     button(value='',_class='', _add='', _event=''){ return '<button type="button" class="btn '+_class+'" '+_add+' onclick="'+_event+'">'+value+'</button>'; }
     label(name='', _class=''){ return '<label class="'+_class+'">'+name+'</label>'; }
 
@@ -28,7 +28,7 @@ class Html{
     a(value='', link='', _class='nav-link'){ return '<a href="'+link+'" class="'+_class+'">' + value + '</a>';}
 
     // list
-    li(value='', link='', icon='', _class='nav-item'){ return '<li class="'+_class+'">' + (link?this.a(value, link, icon, _class):value) + '</li>'; }
+    li(value='', _class='nav-item'){ return '<li class="'+_class+'">' + value + '</li>'; }
     ul(array=[], _class='nav pcoded-inner-navbar'){ return '<ul class="'+_class+'">' + array + '</ul>'; }
 
     // different
