@@ -8,20 +8,27 @@ class User_Controllers extends Controllers{
         this.formList = this.arrayForm()
         this.theadList = this.arrayThead()
         this.tbodyList = this.arrayBody()
+        this.fullList = this.arrayFull()
+        this.checkList = this.checkForm()
+    }
+    async checkForm(){
+        const array = this.arrayForm()
+        for (let index = 0; index < array.length; index++) { await this.checkEmpty(array[index].id,array[index].title)}
+        await this.checkFormatEmail();
+        await this.checkFormatPhone();
+        await this.checkFieldExist('email', 'Email');
     }
     arrayForm(){
         return [
             { title: 'Email', type: 'email', col: 6, class: 'email form-control ', id: 'email', value:'', placeholder: 'Email', require: true },
-            { title: 'Điện Thoại', type: 'tel', col: 6, class: 'phone form-control ', id: 'phone', value:'', placeholder: 'Điện Thoại', require: false },
+            { title: 'Điện Thoại', type: 'tel', col: 6, class: 'phone form-control ', id: 'phone', value:'', placeholder: 'Điện Thoại', require: true },
             { title: 'Mật Khẩu', type: 'password', col: 6, class: 'password form-control ', id: 'password', value:'', placeholder: 'Mật Khẩu', require: true },
             { title: 'Xác Nhận Mật Khẩu', type: 'password', col: 6, class: 're_password form-control ', id: 're_password', value:'', placeholder: 'Xác Nhận Mật Khẩu', require: true },
         ];
     }
-    async arrayBody(){
-        const limit = this.getNumber(this.req.query.limit, process.env.LIMIT)
-        const page = this.getNumber(this.req.query.page, 0)
-        const skip = (page==1 || page==0) ? 0 : (page-1)*limit
-        const array = await this.model.getList(this.search('email'), '', limit, skip)
+    async arrayFull(){ return await this.dataFull('email'); }
+    async arrayBody(){ 
+        const array = await this.dataCommon('email')
         let tr='';
         for (let index = 0; index < array.length; index++) {
             let td='';
@@ -38,7 +45,12 @@ class User_Controllers extends Controllers{
         return Html.tbody(tr)
     }
     arrayThead(){
-        return ['Tên', 'Ngày Tạo', 'Hiển Thị', 'Chức Năng']
+        return [
+            {title: 'Tên', class:'', width: ''},
+            {title: 'Ngày Tạo', class: 'text-center', width: '15%'},
+            {title: 'Hiển Thị', class: 'text-center', width: '10%'},
+            {title: 'Chức Năng', class: 'text-center', width: '15%'}
+        ]
     }
 }
 module.exports = User_Controllers

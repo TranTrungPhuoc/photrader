@@ -6,4 +6,4 @@ class Category_Models extends Models{
         this.table = Schema
     }
 }
-module.exports = new Category_Models()
+module.exports = new Category_Models

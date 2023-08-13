@@ -8,7 +8,7 @@ class Html{
 
     // table
     td(value, _class=''){ return '<td class="'+_class+'">' + value +'</td>'; }
-    th(value, _class='text-center'){ return '<th class="'+_class+'">' + value +'</th>'; }
+    th(value, _class='', width=''){ return '<th class="'+_class+'" width="'+width+'">' + value +'</th>'; }
     tr(value=[], id=''){ return '<tr id="tr_'+id+'">' + value + '</tr>';}
     thead(value=[]){ return '<thead>'+value+'</thead>'; }
     tbody(value=[]){ return '<tbody>'+value+'</tbody>'; }
