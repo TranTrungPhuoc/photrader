@@ -3,17 +3,17 @@ const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
 const moment = require('moment');
-const { default: mongoose } = require('mongoose');
+const mongoose = require('mongoose');
 class Controllers{
-    constructor(req, res, model, formList, theadList, tbodyList, fullList, checkList){
+    constructor(req, res, model){
         this.req = req
         this.res = res
         this.model = model
-        this.formList = formList
-        this.theadList = theadList
-        this.tbodyList = tbodyList
-        this.fullList = fullList
-        this.checkList = checkList
+        this.formList = this.arrayForm()
+        // this.theadList = this.arrayThead()
+        // this.tbodyList = this.arrayBody()
+        // this.fullList = this.arrayFull()
+        // this.checkList = this.checkForm()
     }
     async index(){
         return this.res.render('index', {
@@ -22,8 +22,8 @@ class Controllers{
             main: await this.main()
         })
     }
-    configFormList(){
-        const array = this.formList
+    async configFormList(){
+        const array = await this.formList
         let str='';
         for (let index = 0; index < array.length; index++) {
             str+=Html.div('col-md-'+array[index].col, 
@@ -33,7 +33,7 @@ class Controllers{
         }
         return str;
     }
-    async form(){ return this.res.render('index', {aside: this.aside(), module: this.params(2), main: await this.main(this.configFormList())}) }
+    async form(){ return this.res.render('index', {aside: this.aside(), module: this.params(2), main: await this.main(await this.configFormList())}) }
     regexPhoneNumber(phone){
         const regexPhoneNumber = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
         return phone.match(regexPhoneNumber) ? true : false;
@@ -61,21 +61,28 @@ class Controllers{
             if(getData.length!=0) return this.res.send({error: this.convertCodeToText(403, text)})
         }
     }
+    async checkCompare(){
+        if(this.req.body['password']!=undefined && this.req.body['re_password']!=undefined){
+            if(this.req.body['password']!=this.req.body['re_password']){
+                return this.res.send({error: this.convertCodeToText(405)})
+            } 
+        }
+    }
     convertCodeToText(code, text){
         let str='';
         switch (code) {
             case 401: str=text + ' không được rỗng !!!'; break;
             case 402: str=text + ' không đúng định dạng !!!'; break;
             case 403: str=text + ' đã tồn tại !!!'; break;
+            case 405: str='Xác nhận Mật Khẩu không đúng !!!'; break;
             default: str='No Response'; break;
         }
         return str;
     }
     async process(){
-        return
-        // if(this.req.body['re_password'].trim()!=this.req.body['password'].trim()) return this.res.send({error: 'Xác nhận Mật Khẩu không khớp!'})
-        // if(this.req.body['password']!=undefined) this.req.body['password'] = bcrypt.hashSync(this.req.body['password'], salt);
-        // if(this.req.body['re_password']!=undefined) delete this.req.body['re_password'];
+        await this.checkList
+        if(this.req.body['password']!=undefined) this.req.body['password'] = bcrypt.hashSync(this.req.body['password'], salt);
+        if(this.req.body['re_password']!=undefined) delete this.req.body['re_password'];
         await this.model.create(this.req.body)
         return this.res.send({code: 200})
     }

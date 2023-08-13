@@ -1,3 +1,4 @@
+const { default: mongoose } = require('mongoose')
 const Controllers = require('../helpers/Controllers')
 const Html = require('../helpers/Html')
 const User_Models = require('../models/User_Models')
@@ -5,23 +6,26 @@ class User_Controllers extends Controllers{
     constructor(req, res){
         super(req, res)
         this.model = User_Models
-        this.formList = this.arrayForm()
-        this.theadList = this.arrayThead()
-        this.tbodyList = this.arrayBody()
-        this.fullList = this.arrayFull()
-        this.checkList = this.checkForm()
     }
     async checkForm(){
-        const array = this.arrayForm()
+        const array = await this.arrayForm()
         for (let index = 0; index < array.length; index++) { await this.checkEmpty(array[index].id,array[index].title)}
         await this.checkFormatEmail();
         await this.checkFormatPhone();
         await this.checkFieldExist('email', 'Email');
+        await this.checkCompare()
     }
-    arrayForm(){
+    async arrayForm(){
+        let email = '';
+        let phone = '';
+        if(this.req.params.id != undefined){
+            const getData = await this.model.getDetail({_id: new mongoose.Types.ObjectId(this.req.params.id)})
+            email = getData[0]['email']
+            phone = getData[0]['phone']
+        }
         return [
-            { title: 'Email', type: 'email', col: 6, class: 'email form-control ', id: 'email', value:'', placeholder: 'Email', require: true },
-            { title: 'Điện Thoại', type: 'tel', col: 6, class: 'phone form-control ', id: 'phone', value:'', placeholder: 'Điện Thoại', require: true },
+            { title: 'Email', type: 'email', col: 6, class: 'email form-control ', id: 'email', value: email, placeholder: 'Email', require: true },
+            { title: 'Điện Thoại', type: 'tel', col: 6, class: 'phone form-control ', id: 'phone', value: phone, placeholder: 'Điện Thoại', require: true },
             { title: 'Mật Khẩu', type: 'password', col: 6, class: 'password form-control ', id: 'password', value:'', placeholder: 'Mật Khẩu', require: true },
             { title: 'Xác Nhận Mật Khẩu', type: 'password', col: 6, class: 're_password form-control ', id: 're_password', value:'', placeholder: 'Xác Nhận Mật Khẩu', require: true },
         ];
@@ -29,6 +33,8 @@ class User_Controllers extends Controllers{
     async arrayFull(){ return await this.dataFull('email'); }
     async arrayBody(){ 
         const array = await this.dataCommon('email')
+        console.log(array);
+        return
         let tr='';
         for (let index = 0; index < array.length; index++) {
             let td='';
