@@ -46,6 +46,9 @@
                         alert('Thêm thành công !!!')
                         window.location.href = '/admin/<%-module%>/index'
                     }else{
+                        for (let index = 0; index < results.length; index++) {
+                            $('.error_'+results[index]['key']).text(results[index]['error'])
+                        }
                         alert(results.error)
                     }
                 } 

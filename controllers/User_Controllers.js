@@ -9,11 +9,40 @@ class User_Controllers extends Controllers{
     }
     async checkForm(){
         const array = await this.arrayForm()
-        for (let index = 0; index < array.length; index++) { await this.checkEmpty(array[index].id,array[index].title)}
-        await this.checkFormatEmail();
-        await this.checkFormatPhone();
-        await this.checkFieldExist('email', 'Email');
-        await this.checkCompare()
+        let error = [];
+        for (let index = 0; index < array.length; index++) {
+            error.push(await this.checkEmpty(array[index].id, array[index].title))
+            // if(result.error != undefined){
+            //     this.res.send(result)
+            //     break;
+            // }
+        }
+        console.log(error);
+        return
+        if(result.error == undefined){
+            // console.log(1);
+            await this.checkFormatEmail();
+            // if(checkFormatEmail == false){
+            //     await this.checkFieldExist('email');
+            // }
+
+
+            // if(checkFormatEmail == false){
+            //     await this.checkFormatPhone();
+            // }
+
+            
+            // await this.checkFieldExist('email');
+            // console.log('ok');
+            // if(result.error != undefined){
+            //     await this.checkFormatEmail();
+            // // await this.checkFormatPhone();
+            // return
+            // await this.checkFieldExist('email', 'Email');
+            // await this.checkCompare()
+            // }
+            // console.log(result);
+        }
     }
     async arrayForm(){
         let email = '';
@@ -24,13 +53,15 @@ class User_Controllers extends Controllers{
             phone = getData[0]['phone']
         }
         return [
-            { title: 'Email', type: 'email', col: 6, class: 'email form-control ', id: 'email', value: email, placeholder: 'Email', require: true },
-            { title: 'Điện Thoại', type: 'tel', col: 6, class: 'phone form-control ', id: 'phone', value: phone, placeholder: 'Điện Thoại', require: true },
-            { title: 'Mật Khẩu', type: 'password', col: 6, class: 'password form-control ', id: 'password', value:'', placeholder: 'Mật Khẩu', require: true },
-            { title: 'Xác Nhận Mật Khẩu', type: 'password', col: 6, class: 're_password form-control ', id: 're_password', value:'', placeholder: 'Xác Nhận Mật Khẩu', require: true },
+            { title: 'Email', type: 'email', col: 6, class: 'email form-control ', id: 'email', value: email, placeholder: 'Email', require: false },
+            { title: 'Điện Thoại', type: 'tel', col: 6, class: 'phone form-control ', id: 'phone', value: phone, placeholder: 'Điện Thoại', require: false },
+            { title: 'Mật Khẩu', type: 'password', col: 6, class: 'password form-control ', id: 'password', value:'', placeholder: 'Mật Khẩu', require: false },
+            { title: 'Xác Nhận Mật Khẩu', type: 'password', col: 6, class: 're_password form-control ', id: 're_password', value:'', placeholder: 'Xác Nhận Mật Khẩu', require: false },
         ];
     }
-    async arrayFull(){ return await this.dataFull('email'); }
+    async arrayFull(){ 
+        return await this.dataFull('email'); 
+    }
     async arrayBody(){ 
         const array = await this.dataCommon('email')
         console.log(array);
