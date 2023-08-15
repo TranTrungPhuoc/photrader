@@ -42,14 +42,14 @@
                 beforeSend: function(){ $('.loading').show() },
                 data, success: function(results){
                     $('.loading').hide()
-                    if(results.code==200){
+                    if(results.length == 0){
                         alert('Thêm thành công !!!')
                         window.location.href = '/admin/<%-module%>/index'
                     }else{
                         for (let index = 0; index < results.length; index++) {
-                            $('.error_'+results[index]['key']).text(results[index]['error'])
+                            const key = $('.error_'+results[index]['key']);
+                            key.text(results[index]['error'])
                         }
-                        alert(results.error)
                     }
                 } 
             })

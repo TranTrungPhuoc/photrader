@@ -16,7 +16,7 @@ class Html{
 
     // form
     form(value='', id='formData'){ return '<form id="'+id+'">'+value+'</form>'; }
-    input(type='text', _class='', id='', value='', placeholder='', require=false){ return '<input type="'+type+'" class="'+_class+'" id="'+id+'" name="'+id+'" value="'+value+'" placeholder="'+placeholder+'" '+(require==true?'required':'')+' />';}
+    input(type='text', _class='', id='', value='', placeholder='', require=false, disabled=false){ return '<input type="'+type+'" class="'+_class+'" id="'+id+'" name="'+id+'" value="'+value+'" placeholder="'+placeholder+'"'+(require==true?' required':'')+(disabled==true?' disabled':'')+' />';}
     option(value='', name=''){ return '<option value="'+value+'">' + name + '</option>'; }
     select(array=[], _class='', id=''){let str=''; for (let index = 0; index < array.length; index++) { str+=this.option(array[index]['value'], array[index]['name'])} return '<select class="'+_class+'" id="'+id+'">' + str + '</select>'; }
     textarea(rows=3, value='', _class='', id=''){ return '<textarea rows="'+rows+'" class="'+_class+'" id="'+id+'">' + value + '</textarea>'; }

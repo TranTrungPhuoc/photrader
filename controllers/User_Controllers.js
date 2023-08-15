@@ -8,55 +8,30 @@ class User_Controllers extends Controllers{
         this.model = User_Models
     }
     async checkForm(){
-        const array = await this.arrayForm()
-        let error = [];
-        for (let index = 0; index < array.length; index++) {
-            error.push(await this.checkEmpty(array[index].id, array[index].title))
-            // if(result.error != undefined){
-            //     this.res.send(result)
-            //     break;
-            // }
-        }
-        console.log(error);
-        return
-        if(result.error == undefined){
-            // console.log(1);
-            await this.checkFormatEmail();
-            // if(checkFormatEmail == false){
-            //     await this.checkFieldExist('email');
-            // }
-
-
-            // if(checkFormatEmail == false){
-            //     await this.checkFormatPhone();
-            // }
-
-            
-            // await this.checkFieldExist('email');
-            // console.log('ok');
-            // if(result.error != undefined){
-            //     await this.checkFormatEmail();
-            // // await this.checkFormatPhone();
-            // return
-            // await this.checkFieldExist('email', 'Email');
-            // await this.checkCompare()
-            // }
-            // console.log(result);
-        }
+        const array = await this.arrayForm(); let errors = [];
+        const _id=array[0]['_id']
+        for (let index = 0; index < array.length; index++) errors.push(await this.checkEmpty(array[index].id, array[index].title))
+        if(errors[0]['error']=='') errors[0]['error']=(await this.checkFormatEmail()).error;
+        if(errors[0]['error']=='') errors[0]['error']=(await this.checkFieldExist('email', _id)).error;
+        if(errors[1]['error']=='') errors[1]['error']=(await this.checkFormatPhone()).error;
+        if(errors[1]['error']=='') errors[1]['error']=(await this.checkFieldExist('phone', _id)).error;
+        if(errors[2]['error']=='') errors[2]['error']=(await this.checkLength('password', 6)).error;
+        if(errors[3]['error']=='') errors[3]['error']=(await this.checkCompare()).error;
+        return errors
     }
     async arrayForm(){
-        let email = '';
-        let phone = '';
-        if(this.req.params.id != undefined){
-            const getData = await this.model.getDetail({_id: new mongoose.Types.ObjectId(this.req.params.id)})
-            email = getData[0]['email']
-            phone = getData[0]['phone']
+        let email=''; let phone='';
+        const _id = this.req.params.id;
+        if(_id!=undefined){
+            const getData=await this.model.getDetail({_id: new mongoose.Types.ObjectId(_id)})
+            email=getData[0]['email']
+            phone=getData[0]['phone']
         }
         return [
-            { title: 'Email', type: 'email', col: 6, class: 'email form-control ', id: 'email', value: email, placeholder: 'Email', require: false },
-            { title: 'Điện Thoại', type: 'tel', col: 6, class: 'phone form-control ', id: 'phone', value: phone, placeholder: 'Điện Thoại', require: false },
-            { title: 'Mật Khẩu', type: 'password', col: 6, class: 'password form-control ', id: 'password', value:'', placeholder: 'Mật Khẩu', require: false },
-            { title: 'Xác Nhận Mật Khẩu', type: 'password', col: 6, class: 're_password form-control ', id: 're_password', value:'', placeholder: 'Xác Nhận Mật Khẩu', require: false },
+            { _id, title: 'Email', type: 'email', col: 6, class: 'email form-control ', id: 'email', value: email, placeholder: 'Ví dụ: abc@gmail.com', require: true, disabled: false },
+            { _id, title: 'Điện Thoại', type: 'tel', col: 6, class: 'phone form-control ', id: 'phone', value: phone, placeholder: 'Ví dụ: 0333.444.555', require: true, disabled: false },
+            { _id, title: 'Mật Khẩu', type: 'password', col: 6, class: 'password form-control ', id: 'password', value:'', placeholder: '******', require: true, disabled: (_id!=undefined) ? true: false },
+            { _id, title: 'Xác Nhận Mật Khẩu', type: 'password', col: 6, class: 're_password form-control ', id: 're_password', value:'', placeholder: '******', require: true, disabled: (_id!=undefined) ? true: false },
         ];
     }
     async arrayFull(){ 
@@ -64,8 +39,6 @@ class User_Controllers extends Controllers{
     }
     async arrayBody(){ 
         const array = await this.dataCommon('email')
-        console.log(array);
-        return
         let tr='';
         for (let index = 0; index < array.length; index++) {
             let td='';

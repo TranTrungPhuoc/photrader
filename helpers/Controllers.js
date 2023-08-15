@@ -9,11 +9,6 @@ class Controllers{
         this.req = req
         this.res = res
         this.model = model
-        // this.formList = this.arrayForm()
-        // this.theadList = this.arrayThead()
-        // this.tbodyList = this.arrayBody()
-        // this.fullList = this.arrayFull()
-        // this.checkList = this.checkForm()
     }
     async index(){
         return this.res.render('index', {
@@ -36,19 +31,22 @@ class Controllers{
             str+=Html.div('col-md-'+array[index].col, 
                 Html.div('form-group fill', 
                     Html.label(array[index].title,'form-label') + 
-                    Html.input(array[index].type, array[index].class, array[index].id, array[index].value, array[index].placeholder, array[index].require) +
-                    Html.span('error_'+array[index].id)
+                    Html.input(array[index].type, array[index].class, array[index].id, array[index].value, array[index].placeholder, array[index].require, array[index].disabled) +
+                    Html.span('error error_'+array[index].id)
                 ))
         }
         return str;
     }
     async process(){
-        await this.checkForm()
-        return
-        if(this.req.body['password']!=undefined) this.req.body['password'] = bcrypt.hashSync(this.req.body['password'], salt);
-        if(this.req.body['re_password']!=undefined) delete this.req.body['re_password'];
-        await this.model.create(this.req.body)
-        return this.res.send({code: 200})
+        const array = await this.checkForm()
+        let flag=1
+        for (let index = 0; index < array.length; index++) { if(array[index]['error']!='') flag=0; }
+        if(flag==1){
+            if(this.req.body['password']!=undefined) this.req.body['password'] = bcrypt.hashSync(this.req.body['password'], salt);
+            await this.model.create(this.req.body)
+            return this.res.send([])
+        }
+        else{ return this.res.send(array) }
     }
     async delete(){
         await this.model.delete({_id: new mongoose.Types.ObjectId(this.req.body.id)})
@@ -61,7 +59,6 @@ class Controllers{
         )
         return this.res.send({code: 200})
     }
-    
     async dataCommon(key=''){
         const limit = this.getNumber(this.req.query.limit, process.env.LIMIT)
         const page = this.getNumber(this.req.query.page, 0)
@@ -72,7 +69,7 @@ class Controllers{
         return await this.model.getFull(this.search(key),'_id') 
     }
     async pagination(){
-        const sumData = await this.fullList
+        const sumData = await this.arrayFull()
         let li='';
         if(sumData.length > 0){
             const page = this.getNumber(this.req.query.page, 1)
@@ -86,7 +83,7 @@ class Controllers{
         return Html.div('row', Html.div('col-sm-12', Html.div('dataTables_paginate paging_simple_numbers', Html.ul(li, 'pagination'))))
     }
     async theadCommon(){
-        const array = await this.theadList
+        const array = await this.arrayThead()
         let th=''; for (let index = 0; index < array.length; index++) { th+=Html.th(array[index]['title'], array[index]['class'], array[index]['width']) }
         return Html.thead(Html.tr(th))
     }
@@ -95,7 +92,7 @@ class Controllers{
             Html.div('card', (
                 this.params(3).split('?')[0]=='index'? (
                     Html.div('card-header', Html.div('row', Html.div('col-md-8', Html.h5(Html.a(Html.icon('plus') + ' Thêm','/admin/'+this.params(2)+'/add','btn btn-outline-primary has-ripple'))) + Html.div('col-md-4', Html.form(Html.div('input-group', Html.input('text', 'form-control', 'search', this.req.query.search, 'Tìm Kiếm')), 'formSearch')))) + 
-                    Html.div('card-body table-border-style', Html.div('table-responsive', Html.table(await this.theadCommon(),await this.tbodyList)) + await this.pagination() )
+                    Html.div('card-body table-border-style', Html.div('table-responsive', Html.table(await this.theadCommon(),await this.arrayBody())) + await this.pagination() )
                 )
                 : Html.div('card-body', Html.div('card-body', Html.form(Html.div('row', array) + Html.div('', '<br />' + Html.submit('btn btn-outline-primary has-ripple', 'Lưu') + '&nbsp;' + Html.a('Thoát','/admin/'+this.params(2)+'/index', 'btn btn-outline-secondary has-ripple')) + Html.div('loading', '<br/>' + Html.spiner()))))
             )
@@ -109,38 +106,57 @@ class Controllers{
         }
     }
     async checkEmpty(field){
-        return (this.req.body[field] != undefined && this.req.body[field].trim() == '') ? {key: field, error: this.errorCode(401, this.convertText(field))} : {}
+        const key=field; let error='';
+        if(this.req.body[field] != undefined && this.req.body[field].trim() == ''){
+            error=this.errorCode(401, this.convertText(field))
+        }
+        return {key, error}
+    }
+    async checkLength(field, so){
+        const key=field; let error='';
+        if(this.req.body[field] != undefined && this.req.body[field].length < so){
+            error=this.errorCode(406, this.convertText(field), so)
+        }
+        return {key, error}
     }
     async checkFormatEmail(){
-        if(this.req.body['email'] != undefined){
-            if(!this.validateEmail(this.req.body['email'])){
-                return this.res.send({error: this.errorCode(402, 'Email')})
+        const key='email'; let error='';
+        if(this.req.body[key] != undefined){
+            if((!this.validateEmail(this.req.body[key]))){
+                error=this.errorCode(402, this.convertText(key))
             }
         }
-        return false
+        return {key, error}
     }
     async checkFormatPhone(){
-        if(this.req.body['phone'] != undefined){
-            if(!this.regexPhoneNumber(this.req.body['phone'])){
-                return this.res.send({error: this.errorCode(402, 'Điện Thoại')})
+        const key='phone'; let error='';
+        if(this.req.body[key] != undefined){
+            if((!this.regexPhoneNumber(this.req.body[key]))){
+                error=this.errorCode(402, this.convertText(key))
             }
         }
-        return false
+        return {key, error}
     }
-    async checkFieldExist(field){
-        if(this.req.body[field]!=undefined){
-            const getData = await this.model.getDetail({[field]: this.req.body[field]})
-            if(getData.length!=0) return this.res.send({error: this.errorCode(403, this.convertText(field))})
+    async checkFieldExist(field, _id){
+        const key=field; let error='';
+        if(this.req.body[key] != undefined){
+            const obj = {[key]: this.req.body[key]}
+            if(_id!=undefined){
+                obj['_id']={$ne: new mongoose.Types.ObjectId(_id) }
+            }
+            const getData = await this.model.getDetail(obj)
+            if(getData.length!=0) error=this.errorCode(403, this.convertText(key))
         }
-        return false
+        return {key, error}
     }
     async checkCompare(){
+        const key='re_password'; let error='';
         if(this.req.body['password']!=undefined && this.req.body['re_password']!=undefined){
             if(this.req.body['password']!=this.req.body['re_password']){
-                return this.res.send({error: this.errorCode(405)})
+                error=this.errorCode(405)
             } 
         }
-        return false
+        return {key, error}
     }
     regexPhoneNumber(phone){
         const regexPhoneNumber = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
@@ -164,7 +180,9 @@ class Controllers{
         }
         return str;
     }
-    params(so){ return this.req.originalUrl.split('/')[so] }
+    params(so){ 
+        return this.req.originalUrl.split('/')[so] 
+    }
     aside(){
         const array = JSON.parse(fs.readFileSync('aside.json')).data;
         let str='';
@@ -196,13 +214,14 @@ class Controllers{
     convertDate(value){ 
         const date = moment(value); return date.format('DD')+'/'+date.format('MM')+'/'+date.format('YYYY') 
     }
-    errorCode(code, text){
+    errorCode(code, text, so=0){
         let str='';
         switch (code) {
             case 401: str=text + ' không được rỗng !!!'; break;
             case 402: str=text + ' không đúng định dạng !!!'; break;
             case 403: str=text + ' đã tồn tại !!!'; break;
             case 405: str='Xác nhận Mật Khẩu không đúng !!!'; break;
+            case 406: str=text + ' chứa ít nhất '+so+' kí tự !!!'; break;
             default: str='No Response'; break;
         }
         return str;
