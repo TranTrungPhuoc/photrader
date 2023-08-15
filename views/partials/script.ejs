@@ -43,8 +43,10 @@
                 data, success: function(results){
                     $('.loading').hide()
                     if(results.length == 0){
-                        alert('Thêm thành công !!!')
-                        window.location.href = '/admin/<%-module%>/index'
+                        if(window.location.pathname.includes('add')){
+                            alert('Thêm thành công !!!')
+                            window.location.href = '/admin/<%-module%>/index'
+                        }
                     }else{
                         for (let index = 0; index < results.length; index++) {
                             const key = $('.error_'+results[index]['key']);

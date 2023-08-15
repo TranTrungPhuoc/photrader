@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
 const moment = require('moment');
 const mongoose = require('mongoose');
+const LocalStorage = require('node-localstorage').LocalStorage,
+localStorage = new LocalStorage('./scratch');
 class Controllers{
     constructor(req, res, model){
         this.req = req
@@ -43,7 +45,14 @@ class Controllers{
         for (let index = 0; index < array.length; index++) { if(array[index]['error']!='') flag=0; }
         if(flag==1){
             if(this.req.body['password']!=undefined) this.req.body['password'] = bcrypt.hashSync(this.req.body['password'], salt);
-            await this.model.create(this.req.body)
+            if(localStorage.getItem('url').includes('edit')){
+                const _id=localStorage.getItem('url').split('/').pop()
+                await this.model.update({_id: new mongoose.Types.ObjectId(_id)}, this.req.body)
+                console.log(1);
+            }else{
+                console.log(2);
+                await this.model.create(this.req.body)
+            }
             return this.res.send([])
         }
         else{ return this.res.send(array) }

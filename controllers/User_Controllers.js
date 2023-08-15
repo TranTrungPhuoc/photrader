@@ -2,14 +2,17 @@ const { default: mongoose } = require('mongoose')
 const Controllers = require('../helpers/Controllers')
 const Html = require('../helpers/Html')
 const User_Models = require('../models/User_Models')
+const LocalStorage = require('node-localstorage').LocalStorage,
+localStorage = new LocalStorage('./scratch');
 class User_Controllers extends Controllers{
     constructor(req, res){
         super(req, res)
         this.model = User_Models
     }
     async checkForm(){
-        const array = await this.arrayForm(); let errors = [];
-        const _id=array[0]['_id']
+        const array = await this.arrayForm();
+        let errors = [];
+        const _id=localStorage.getItem('url').split('/').pop()
         for (let index = 0; index < array.length; index++) errors.push(await this.checkEmpty(array[index].id, array[index].title))
         if(errors[0]['error']=='') errors[0]['error']=(await this.checkFormatEmail()).error;
         if(errors[0]['error']=='') errors[0]['error']=(await this.checkFieldExist('email', _id)).error;
@@ -20,22 +23,25 @@ class User_Controllers extends Controllers{
         return errors
     }
     async arrayForm(){
+        localStorage.setItem('url', this.req.originalUrl)
         let email=''; let phone='';
         const _id = this.req.params.id;
         if(_id!=undefined){
             const getData=await this.model.getDetail({_id: new mongoose.Types.ObjectId(_id)})
             email=getData[0]['email']
             phone=getData[0]['phone']
+            localStorage.setItem('url', this.req.originalUrl)
         }
-        return [
-            { _id, title: 'Email', type: 'email', col: 6, class: 'email form-control ', id: 'email', value: email, placeholder: 'Ví dụ: abc@gmail.com', require: true, disabled: false },
-            { _id, title: 'Điện Thoại', type: 'tel', col: 6, class: 'phone form-control ', id: 'phone', value: phone, placeholder: 'Ví dụ: 0333.444.555', require: true, disabled: false },
-            { _id, title: 'Mật Khẩu', type: 'password', col: 6, class: 'password form-control ', id: 'password', value:'', placeholder: '******', require: true, disabled: (_id!=undefined) ? true: false },
-            { _id, title: 'Xác Nhận Mật Khẩu', type: 'password', col: 6, class: 're_password form-control ', id: 're_password', value:'', placeholder: '******', require: true, disabled: (_id!=undefined) ? true: false },
-        ];
+        const array = [
+            { title: 'Email', type: 'email', col: 6, class: 'email form-control ', id: 'email', value: email, placeholder: 'Ví dụ: abc@gmail.com', require: true, disabled: false },
+            { title: 'Điện Thoại', type: 'tel', col: 6, class: 'phone form-control ', id: 'phone', value: phone, placeholder: 'Ví dụ: 0333.444.555', require: true, disabled: false },
+            { title: 'Mật Khẩu', type: 'password', col: 6, class: 'password form-control ', id: 'password', value:'', placeholder: '******', require: true, disabled: (_id!=undefined) ? true: false },
+            { title: 'Xác Nhận Mật Khẩu', type: 'password', col: 6, class: 're_password form-control ', id: 're_password', value:'', placeholder: '******', require: true, disabled: (_id!=undefined) ? true: false },
+        ]
+        return array;
     }
     async arrayFull(){ 
-        return await this.dataFull('email'); 
+        return await this.dataFull('email');
     }
     async arrayBody(){ 
         const array = await this.dataCommon('email')
