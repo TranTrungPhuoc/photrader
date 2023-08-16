@@ -19,38 +19,40 @@ class Controllers{
             main: await this.main()
         })
     }
-    async form(){ 
+    async form(){
+        const id = this.req.params['id']
         return this.res.render('index', {
-            aside: this.aside(), 
-            module: this.params(2), 
-            main: await this.main(await this.configFormList())
-        }) 
+            aside: this.aside(),
+            module: this.params(2),
+            main: await this.main(await this.configFormList(id))
+        })
     }
-    async configFormList(){
-        const array = await this.arrayForm()
+    async configFormList(id){
+        const array = await this.arrayForm(id)
         let str='';
-        for (let index = 0; index < array.length; index++) {
-            str+=Html.div('col-md-'+array[index].col, 
-                Html.div('form-group fill', 
-                    Html.label(array[index].title,'form-label') + 
-                    Html.input(array[index].type, array[index].class, array[index].id, array[index].value, array[index].placeholder, array[index].require, array[index].disabled) +
-                    Html.span('error error_'+array[index].id)
-                ))
+        if(array!=undefined){
+            for (let index = 0; index < array.length; index++) {
+                str+=Html.div('col-md-'+array[index].col, 
+                    Html.div('form-group fill', 
+                        Html.label(array[index].title,'form-label') + 
+                        Html.input(array[index].type, array[index].class, array[index].id, array[index].value, array[index].placeholder, array[index].require, array[index].disabled) +
+                        Html.span('error error_'+array[index].id)
+                    ))
+            }
+            if(id!=undefined){str+=Html.input('hidden','','idEdit',id)}
         }
         return str;
     }
     async process(){
-        const array = await this.checkForm()
+        const _id=this.req.query['id']
+        const array = await this.checkForm(_id)
         let flag=1
         for (let index = 0; index < array.length; index++) { if(array[index]['error']!='') flag=0; }
         if(flag==1){
             if(this.req.body['password']!=undefined) this.req.body['password'] = bcrypt.hashSync(this.req.body['password'], salt);
-            if(localStorage.getItem('url').includes('edit')){
-                const _id=localStorage.getItem('url').split('/').pop()
+            if(_id!=undefined){
                 await this.model.update({_id: new mongoose.Types.ObjectId(_id)}, this.req.body)
-                console.log(1);
             }else{
-                console.log(2);
                 await this.model.create(this.req.body)
             }
             return this.res.send([])

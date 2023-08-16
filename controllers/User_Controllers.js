@@ -9,28 +9,27 @@ class User_Controllers extends Controllers{
         super(req, res)
         this.model = User_Models
     }
-    async checkForm(){
-        const array = await this.arrayForm();
+    async checkForm(_id){
+        const array=await this.arrayForm(_id);
         let errors = [];
-        const _id=localStorage.getItem('url').split('/').pop()
-        for (let index = 0; index < array.length; index++) errors.push(await this.checkEmpty(array[index].id, array[index].title))
-        if(errors[0]['error']=='') errors[0]['error']=(await this.checkFormatEmail()).error;
-        if(errors[0]['error']=='') errors[0]['error']=(await this.checkFieldExist('email', _id)).error;
-        if(errors[1]['error']=='') errors[1]['error']=(await this.checkFormatPhone()).error;
-        if(errors[1]['error']=='') errors[1]['error']=(await this.checkFieldExist('phone', _id)).error;
-        if(errors[2]['error']=='') errors[2]['error']=(await this.checkLength('password', 6)).error;
-        if(errors[3]['error']=='') errors[3]['error']=(await this.checkCompare()).error;
+        if(array!=undefined){ for (let index = 0; index < array.length; index++) errors.push(await this.checkEmpty(array[index].id, array[index].title)) }
+        if(errors.length>0){
+            if(errors[0]['error']=='') errors[0]['error']=(await this.checkFormatEmail()).error;
+            if(errors[0]['error']=='') errors[0]['error']=(await this.checkFieldExist('email', _id)).error;
+            if(errors[1]['error']=='') errors[1]['error']=(await this.checkFormatPhone()).error;
+            if(errors[1]['error']=='') errors[1]['error']=(await this.checkFieldExist('phone', _id)).error;
+            if(errors[2]['error']=='') errors[2]['error']=(await this.checkLength('password', 6)).error;
+            if(errors[3]['error']=='') errors[3]['error']=(await this.checkCompare()).error;
+        }
         return errors
     }
-    async arrayForm(){
-        localStorage.setItem('url', this.req.originalUrl)
-        let email=''; let phone='';
-        const _id = this.req.params.id;
+    async arrayForm(_id){
+        let email='';
+        let phone='';
         if(_id!=undefined){
             const getData=await this.model.getDetail({_id: new mongoose.Types.ObjectId(_id)})
             email=getData[0]['email']
             phone=getData[0]['phone']
-            localStorage.setItem('url', this.req.originalUrl)
         }
         const array = [
             { title: 'Email', type: 'email', col: 6, class: 'email form-control ', id: 'email', value: email, placeholder: 'Ví dụ: abc@gmail.com', require: true, disabled: false },
