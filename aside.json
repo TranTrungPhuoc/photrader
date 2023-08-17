@@ -9,7 +9,7 @@
         { "title": "Cấu Hình Site", "link": "site", "icon": "settings" },
         { "title": "Cài Đặt Mail", "link": "mail", "icon": "mail" },
         { "title": "Mạng Xã Hội", "link": "network", "icon": "share-2" },
-        { "title": "Liên Hệ", "link": "contact", "icon": "phone-call" },
-        { "title": "Thành Viên", "link": "user", "icon": "users" }
+        { "title": "Thành Viên", "link": "user", "icon": "users" },
+        { "title": "Liên Hệ", "link": "contact", "icon": "phone-call" }
     ]
 }
