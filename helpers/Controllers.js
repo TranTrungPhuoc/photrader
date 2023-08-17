@@ -4,81 +4,30 @@ const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
 const moment = require('moment');
 const mongoose = require('mongoose');
-const LocalStorage = require('node-localstorage').LocalStorage,
-localStorage = new LocalStorage('./scratch');
+const Validation=require('./Validatation')
+const ErrorCode=require('./Error')
+const Convert=require('./Convert')
 class Controllers{
+    
     constructor(req, res, model){
-        this.req = req
-        this.res = res
-        this.model = model
+        this.req=req
+        this.res=res
+        this.model=model
+        this.module=this.params(2)
     }
-    async index(){
-        return this.res.render('index', {
-            aside: this.aside(), 
-            module: this.params(2), 
-            main: await this.main()
-        })
+
+    params(so){ 
+        return this.req.originalUrl.split('/')[so] 
     }
-    async form(){
-        const id = this.req.params['id']
-        return this.res.render('index', {
-            aside: this.aside(),
-            module: this.params(2),
-            main: await this.main(await this.configFormList(id))
-        })
+    
+    addHtml(){
+        return Html.div('col-md-8', Html.h5(Html.a(Html.icon('plus') + ' Thêm','/admin/'+this.module+'/add','btn btn-outline-primary has-ripple')))
     }
-    async configFormList(id){
-        const array = await this.arrayForm(id)
-        let str='';
-        if(array!=undefined){
-            for (let index = 0; index < array.length; index++) {
-                str+=Html.div('col-md-'+array[index].col, 
-                    Html.div('form-group fill', 
-                        Html.label(array[index].title,'form-label') + 
-                        Html.input(array[index].type, array[index].class, array[index].id, array[index].value, array[index].placeholder, array[index].require, array[index].disabled) +
-                        Html.span('error error_'+array[index].id)
-                    ))
-            }
-            if(id!=undefined){str+=Html.input('hidden','','idEdit',id)}
-        }
-        return str;
+
+    searchHtml(){
+        return Html.div('col-md-4', Html.form(Html.div('input-group', Html.input('text', 'form-control', 'search', this.req.query.search, 'Tìm Kiếm')), 'formSearch'))
     }
-    async process(){
-        const _id=this.req.query['id']
-        const array = await this.checkForm(_id)
-        let flag=1
-        for (let index = 0; index < array.length; index++) { if(array[index]['error']!='') flag=0; }
-        if(flag==1){
-            if(this.req.body['password']!=undefined) this.req.body['password'] = bcrypt.hashSync(this.req.body['password'], salt);
-            if(_id!=undefined){
-                await this.model.update({_id: new mongoose.Types.ObjectId(_id)}, this.req.body)
-            }else{
-                await this.model.create(this.req.body)
-            }
-            return this.res.send([])
-        }
-        else{ return this.res.send(array) }
-    }
-    async delete(){
-        await this.model.delete({_id: new mongoose.Types.ObjectId(this.req.body.id)})
-        return this.res.send({code: 200})
-    }
-    async status(){
-        await this.model.update({
-            _id: new mongoose.Types.ObjectId(this.req.body.id)}, 
-            {status: this.req.body.status, updated: new Date()}
-        )
-        return this.res.send({code: 200})
-    }
-    async dataCommon(key=''){
-        const limit = this.getNumber(this.req.query.limit, process.env.LIMIT)
-        const page = this.getNumber(this.req.query.page, 0)
-        const skip = (page==1 || page==0) ? 0 : (page-1)*limit
-        return await this.model.getList(this.search(key), '', limit, skip)
-    }
-    async dataFull(key=''){ 
-        return await this.model.getFull(this.search(key),'_id') 
-    }
+
     async pagination(){
         const sumData = await this.arrayFull()
         let li='';
@@ -93,107 +42,50 @@ class Controllers{
         }
         return Html.div('row', Html.div('col-sm-12', Html.div('dataTables_paginate paging_simple_numbers', Html.ul(li, 'pagination'))))
     }
-    async theadCommon(){
-        const array = await this.arrayThead()
-        let th=''; for (let index = 0; index < array.length; index++) { th+=Html.th(array[index]['title'], array[index]['class'], array[index]['width']) }
-        return Html.thead(Html.tr(th))
+
+    headerContent(){
+        return Html.div('card-header', Html.div('row', this.addHtml() + this.searchHtml()))
     }
+
+    async bodyContent(){
+        return Html.div('card-body table-border-style', Html.div('table-responsive', Html.table(await this.theadCommon(),await this.arrayBody())) + await this.pagination() )
+    }
+
+    formContent(array){
+        return Html.div('card-body', Html.div('card-body', Html.form(Html.div('row', array) + Html.div('', '<br />' + Html.submit('btn btn-outline-primary has-ripple', 'Lưu') + '&nbsp;' + Html.a('Thoát','/admin/'+this.module+'/index', 'btn btn-outline-secondary has-ripple')) + Html.div('loading', '<br/>' + Html.spiner()))))
+    }
+
+    action(){
+        return this.params(3).split('?')[0]
+    }
+
     async content(array){
-        return Html.div('row', Html.div('col-xl-12',
-            Html.div('card', (
-                this.params(3).split('?')[0]=='index'? (
-                    Html.div('card-header', Html.div('row', Html.div('col-md-8', Html.h5(Html.a(Html.icon('plus') + ' Thêm','/admin/'+this.params(2)+'/add','btn btn-outline-primary has-ripple'))) + Html.div('col-md-4', Html.form(Html.div('input-group', Html.input('text', 'form-control', 'search', this.req.query.search, 'Tìm Kiếm')), 'formSearch')))) + 
-                    Html.div('card-body table-border-style', Html.div('table-responsive', Html.table(await this.theadCommon(),await this.arrayBody())) + await this.pagination() )
-                )
-                : Html.div('card-body', Html.div('card-body', Html.form(Html.div('row', array) + Html.div('', '<br />' + Html.submit('btn btn-outline-primary has-ripple', 'Lưu') + '&nbsp;' + Html.a('Thoát','/admin/'+this.params(2)+'/index', 'btn btn-outline-secondary has-ripple')) + Html.div('loading', '<br/>' + Html.spiner()))))
-            )
-        )))
+        return Html.div('row', Html.div('col-xl-12', Html.div('card', (this.action()=='index'? (this.headerContent() + await this.bodyContent()) : this.formContent(array)))))
     }
-    async main(array=[]){
-        try {
-            return Html.section('pcoded-main-container', Html.div('pcoded-content', this.breadcrumb() + await this.content(array)));
-        } catch (error) {
-            this.res.send({error})
-        }
+
+    breadcrumbHTML(str){
+        const title=Html.div('page-header-title', Html.h5(Convert.index(this.module),'m-b-10'))
+        const url=Html.ul(str, 'breadcrumb')
+        return Html.div('page-header', Html.div('page-block', Html.div('row align-items-center', Html.div('col-md-12', title + url ))))
     }
-    async checkEmpty(field){
-        const key=field; let error='';
-        if(this.req.body[field] != undefined && this.req.body[field].trim() == ''){
-            error=this.errorCode(401, this.convertText(field))
-        }
-        return {key, error}
-    }
-    async checkLength(field, so){
-        const key=field; let error='';
-        if(this.req.body[field] != undefined && this.req.body[field].length < so){
-            error=this.errorCode(406, this.convertText(field), so)
-        }
-        return {key, error}
-    }
-    async checkFormatEmail(){
-        const key='email'; let error='';
-        if(this.req.body[key] != undefined){
-            if((!this.validateEmail(this.req.body[key]))){
-                error=this.errorCode(402, this.convertText(key))
-            }
-        }
-        return {key, error}
-    }
-    async checkFormatPhone(){
-        const key='phone'; let error='';
-        if(this.req.body[key] != undefined){
-            if((!this.regexPhoneNumber(this.req.body[key]))){
-                error=this.errorCode(402, this.convertText(key))
-            }
-        }
-        return {key, error}
-    }
-    async checkFieldExist(field, _id){
-        const key=field; let error='';
-        if(this.req.body[key] != undefined){
-            const obj = {[key]: this.req.body[key]}
-            if(_id!=undefined){
-                obj['_id']={$ne: new mongoose.Types.ObjectId(_id) }
-            }
-            const getData = await this.model.getDetail(obj)
-            if(getData.length!=0) error=this.errorCode(403, this.convertText(key))
-        }
-        return {key, error}
-    }
-    async checkCompare(){
-        const key='re_password'; let error='';
-        if(this.req.body['password']!=undefined && this.req.body['re_password']!=undefined){
-            if(this.req.body['password']!=this.req.body['re_password']){
-                error=this.errorCode(405)
-            } 
-        }
-        return {key, error}
-    }
-    regexPhoneNumber(phone){
-        const regexPhoneNumber = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
-        return phone.match(regexPhoneNumber) ? true : false;
-    }
-    validateEmail(email){
-        const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return email.match(regexEmail) ? true : false;
-    };
-    convertText(key=''){
+
+    breadcrumb(){
+        const array=[
+            {title: Html.icon('home'), link: 'dashboard'},
+            {title: Convert.index(this.module), link: this.module},
+            {title: (this.params(3)=='index'?'Bảng Dữ Liệu': 'Form'), link: ''}
+        ]
         let str='';
-        switch (key) {
-            case 'user': str='Thành Viên'; break;
-            case 'post': str='Bài Viết'; break;
-            case 'category': str='Danh Mục'; break;
-            case 'email': str='Email'; break;
-            case 'phone': str='Điện Thoại'; break;
-            case 'password': str='Mật Khẩu'; break;
-            case 're_password': str='Xác Nhận Mật Khẩu'; break;
-            default: str='No Name'; break;
+        for (let index = 0; index < array.length; index++) {
+            str += Html.li(Html.a(array[index].title, array[index].link?'/admin/' + array[index].link + '/index': '',''), 'breadcrumb-item');
         }
-        return str;
+        return this.breadcrumbHTML(str)
     }
-    params(so){ 
-        return this.req.originalUrl.split('/')[so] 
+
+    async main(array=[]){
+        return Html.section('pcoded-main-container', Html.div('pcoded-content', this.breadcrumb() + await this.content(array)));
     }
+
     aside(){
         const array = JSON.parse(fs.readFileSync('aside.json')).data;
         let str='';
@@ -202,40 +94,130 @@ class Controllers{
         }
         return Html.ul(str)
     }
-    breadcrumb(){
-        const array=[
-            {title: Html.icon('home'), link: 'dashboard'},
-            {title: this.convertText(this.params(2)), link: this.params(2)},
-            {title: (this.params(3)=='index'?'Bảng Dữ Liệu': 'Form'), link: ''}
-        ]
+
+    async index(array=[]){ await this.res.render('index', { aside: this.aside(), module: this.module, main: await this.main(array) }) }
+
+    async formHTML(id){
+        const array = await this.formList()
         let str='';
         for (let index = 0; index < array.length; index++) {
-            str += Html.li(Html.a(array[index].title, array[index].link?'/admin/' + array[index].link + '/index': '',''), 'breadcrumb-item');
+            str+=Html.div('col-md-'+array[index]['col'], 
+            Html.div('form-group fill', Html.label(array[index]['title'],'form-label') + 
+                Html.input(array[index]['type'], array[index]['class'], array[index]['id'], array[index]['value'], array[index]['placeholder'], array[index]['require'], array[index]['disabled']) +
+                Html.span('error error_'+array[index]['id'])
+            ))
         }
-        return Html.div('page-header', Html.div('page-block', Html.div('row align-items-center', 
-            Html.div('col-md-12', Html.div('page-header-title', Html.h5(this.convertText(this.params(2)),'m-b-10')) + Html.ul(str, 'breadcrumb'))))
-        )
+        if(id!=undefined){str+=Html.input('hidden','','idEdit',id)}
+        return str;
     }
+
+    async form(){
+        const id = this.req.params['id']
+        return await this.index(await this.formHTML(id));
+    }
+
+    getValue(field){
+        return this.req.body[field]
+    }
+
+    async process(){
+        let error=[];
+        error=this.checkForm()
+        // console.log(error);
+        // return
+        // let flag=1
+        // for (let index = 0; index < array.length; index++) { if(array[index]['error']!='') flag=0; }
+        // if(flag==1){
+        //     if(this.req.body['password']!=undefined) this.req.body['password'] = bcrypt.hashSync(this.req.body['password'], salt);
+        //     if(_id!=undefined){
+        //         await this.model.update({_id: new mongoose.Types.ObjectId(_id)}, this.req.body)
+        //     }else{
+        //         await this.model.create(this.req.body)
+        //     }
+        //     return this.res.send([])
+        // }
+        // else{ return this.res.send(array) }
+
+        if(error.length == 0){
+            const id=this.req.query['id']
+            if(this.req.body['password']!=undefined){ this.req.body['password'] = bcrypt.hashSync(this.req.body['password'], salt); }
+            (id == 'undefined') ? await this.model.create(this.req.body) : await this.model.update(this.objectId(id), this.req.body);
+        }
+
+        return this.res.send(error)
+    }
+
+    // response(code, field){
+    //     return this.res.send({key: field, error: ErrorCode(code, Convert(field))})
+    // }
+
+    checkFormatEmail(){
+        return Validation.checkEmail(this.getValue('email'))
+    }
+
+    checkFormatPhone(){
+        return Validation.checkPhone(this.getValue('phone'))
+    }
+
+    objectId(id){
+        return {_id: new mongoose.Types.ObjectId(id)}
+    }
+
+    async delete(){
+        await this.model.delete(this.objectId(this.req.body.id))
+        return this.res.send({code: 200})
+    }
+
+    async status(){
+        await this.model.update(this.objectId(this.req.body.id), {status: this.req.body.status, updated: new Date()})
+        return this.res.send({code: 200})
+    }
+
+    async dataCommon(key=''){
+        const limit = this.getNumber(this.req.query.limit, process.env.LIMIT)
+        const page = this.getNumber(this.req.query.page, 0)
+        const skip = (page==1 || page==0) ? 0 : (page-1)*limit
+        return await this.model.getList(this.search(key), '', limit, skip)
+    }
+
+    async dataFull(key=''){ 
+        return await this.model.getFull(this.search(key),'_id') 
+    }
+
+    async theadCommon(){
+        const array = await this.arrayThead()
+        let th=''; for (let index = 0; index < array.length; index++) { th+=Html.th(array[index]['title'], array[index]['class'], array[index]['width']) }
+        return Html.thead(Html.tr(th))
+    }
+    
     search(key=''){ 
         return (this.req.query.search) ? { [key]: {'$regex': this.req.query.search, '$options': 'i'}}: {}; 
     }
+
     getNumber(value, _default){ 
         return value?!isNaN(value) ? parseInt(value): _default: _default 
     }
+
     convertDate(value){ 
         const date = moment(value); return date.format('DD')+'/'+date.format('MM')+'/'+date.format('YYYY') 
     }
-    errorCode(code, text, so=0){
-        let str='';
-        switch (code) {
-            case 401: str=text + ' không được rỗng !!!'; break;
-            case 402: str=text + ' không đúng định dạng !!!'; break;
-            case 403: str=text + ' đã tồn tại !!!'; break;
-            case 405: str='Xác nhận Mật Khẩu không đúng !!!'; break;
-            case 406: str=text + ' chứa ít nhất '+so+' kí tự !!!'; break;
-            default: str='No Response'; break;
-        }
-        return str;
+
+    // tbody elements
+    tdDate(date){
+        return Html.td(this.convertDate(date), 'text-center')
     }
+    tdStatus(id, status){
+        return Html.td(Html.switch(id, (status==true?'checked':'')), 'text-center')
+    }
+    tdEdit(id, module){
+        return Html.a(Html.icon('edit'),'/admin/'+module+'/edit/'+id,'btn btn-sm btn-outline-info has-ripple')
+    }
+    tdDelete(id, value){
+        return Html.button(Html.icon('trash'),'btn btn-sm btn-outline-danger has-ripple', ' data-bs-toggle="modal" data-bs-target="#deleteModal"', "popupDelete('"+id+"', '"+value+"')")
+    }
+    tdFunction(id, module, value){
+        return Html.td(this.tdEdit(id, module) + '&nbsp;' + this.tdDelete(id, value))
+    }
+    // end
 }
 module.exports = Controllers
