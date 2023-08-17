@@ -36,8 +36,9 @@
             for (let index = 0; index < array.length; index++) {
                 data[array[index].name] = array[index].value
             }
+            const id=$('#idEdit').val()
             $.ajax({
-                url: '/admin/<%-module%>/process',
+                url: '/admin/<%-module%>/process?id='+id,
                 type: 'POST',
                 beforeSend: function(){ $('.loading').show() },
                 data, success: function(results){
