@@ -47,7 +47,7 @@ class Controllers{
     }
 
     async bodyContent(){
-        return Html.div('card-body table-border-style', Html.div('table-responsive', Html.table(await this.theadCommon(),await this.arrayBody())) + await this.pagination() )
+        return Html.div('card-body table-border-style', Html.div('table-responsive', Html.table(await this.theadCommon(),await this.tbodyList())) + await this.pagination() )
     }
 
     formContent(array){
@@ -123,10 +123,15 @@ class Controllers{
     async process(){
         const id=this.req.query['id']
         let error=[];
-        error=this.checkForm(id)
+        error=await this.checkForm(id)
         if(error.length == 0){
-            if(this.req.body['password']!=undefined){ this.req.body['password'] = bcrypt.hashSync(this.req.body['password'], salt); }
-            (id == 'undefined') ? await this.model.create(this.req.body) : await this.model.update(this.objectId(id), this.req.body);
+            if(this.getValue['password']!=undefined){ this.req.body['password'] = bcrypt.hashSync(this.getValue['password'], salt); }
+            if(id == 'undefined'){
+                await this.model.create(this.req.body)
+            }else{
+                this.req.body['updated'] = new Date()
+                await this.model.update(this.objectId(id), this.req.body);
+            }
         }
         return this.res.send(error)
     }
@@ -145,6 +150,13 @@ class Controllers{
 
     checkPasswordCompare(){
         return Validation.checkCompare(this.getValue('password'), this.getValue('re_password'))
+    }
+
+    async checkExistData(field, id){
+        const obj = {[field]: this.getValue(field)}
+        if(id!='undefined'){ obj['_id']={$ne: new mongoose.Types.ObjectId(id)} }
+        const data = await this.model.getDetail(obj)
+        return data.length == 0 ? true : false;
     }
 
     objectId(id){
@@ -190,7 +202,6 @@ class Controllers{
         const date = moment(value); return date.format('DD')+'/'+date.format('MM')+'/'+date.format('YYYY') 
     }
 
-    // tbody elements
     tdDate(date){
         return Html.td(this.convertDate(date), 'text-center')
     }
@@ -206,6 +217,5 @@ class Controllers{
     tdFunction(id, module, value){
         return Html.td(this.tdEdit(id, module) + '&nbsp;' + this.tdDelete(id, value))
     }
-    // end
 }
 module.exports = Controllers

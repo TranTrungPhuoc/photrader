@@ -26,18 +26,6 @@ class Validation{
         return (valueOne!=undefined && valueTwo!=undefined &&valueOne.trim()==valueTwo.trim()) ? true: false 
     }
 
-    // async checkFieldExist(field, _id){
-    //     const key=field; let error='';
-    //     if(this.req.body[key] != undefined){
-    //         const obj = {[key]: this.req.body[key]}
-    //         if(_id!=undefined){
-    //             obj['_id']={$ne: new mongoose.Types.ObjectId(_id) }
-    //         }
-    //         const getData = await this.model.getDetail(obj)
-    //         if(getData.length!=0) error=this.errorCode(403, this.convertText(key))
-    //     }
-    //     return {key, error}
-    // }
 }
 
 module.exports = new Validation
