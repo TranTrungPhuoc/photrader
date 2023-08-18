@@ -11,45 +11,47 @@ class User_Controllers extends Controllers{
         this.model = User_Models
     }
 
-    checkForm(){
-        const formList=this.formList();
-        
+    checkForm(id){
+        const formList=this.formList(id);
         let errors = [];
-        
         for (let index = 0; index < formList.length; index++) {
             const field=formList[index]['id']
             const value=this.getValue(field)
             const checkEmpty=Validation.checkEmpty(value)
             if(!checkEmpty){
                 errors.push({ [field]: Error.index(401, field) })
+            }else{
+                if(field=='email'&&formList[index]['check']==true){
+                    if(!this.checkFormatEmail()){
+                        errors.push({ [field]: Error.index(402, field) })
+                    }
+                }
+                if(field=='phone'&&formList[index]['check']==true){
+                    if(!this.checkFormatPhone()){
+                        errors.push({ [field]: Error.index(402, field) })
+                    }
+                }
+                if(field=='password'&&formList[index]['check']==true){
+                    if(!this.checkPasswordLength(6)){
+                        errors.push({ [field]: Error.index(406, field, 6) })
+                    }
+                }
+                if(field=='re_password'&&formList[index]['check']==true){
+                    if(!this.checkPasswordCompare()){
+                        errors.push({ [field]: Error.index(405) })
+                    }
+                }
             }
         }
-        console.log(errors);
-        // if(errors[0]['key'] == 'email'){
-        //     console.log(errors[0]['error']);
-        //     if(!this.checkFormatEmail()){
-        //         errors.push({ key: 'email', error: Error.index(402, 'Email') })
-        //     }
-        // }
-        
-        // let errors = [];
-        // if(array!=undefined){
-        //     for (let index = 0; index < array.length; index++){
-        //         errors.push(await this.checkEmpty(array[index].id, array[index].title))
-        //     }
-        // }
+
         // if(errors.length>0){
-        //     if(errors[0]['error']=='') errors[0]['error']=(await this.checkFormatEmail()).error;
         //     if(errors[0]['error']=='') errors[0]['error']=(await this.checkFieldExist('email', _id)).error;
-        //     if(errors[1]['error']=='') errors[1]['error']=(await this.checkFormatPhone()).error;
         //     if(errors[1]['error']=='') errors[1]['error']=(await this.checkFieldExist('phone', _id)).error;
-        //     if(errors[2]['error']=='') errors[2]['error']=(await this.checkLength('password', 6)).error;
-        //     if(errors[3]['error']=='') errors[3]['error']=(await this.checkCompare()).error;
         // }
+
         return errors
     }
     async arrayForm(_id){
-        console.log(_id);
         let email='';
         let phone='';
         if(_id!=undefined){
@@ -85,20 +87,12 @@ class User_Controllers extends Controllers{
         }
         return Html.tbody(tr)
     }
-    arrayThead(){
+    formList(data){
         return [
-            {title: 'Tên', class:'', width: ''},
-            {title: 'Ngày Tạo', class: 'text-center', width: '15%'},
-            {title: 'Hiển Thị', class: 'text-center', width: '10%'},
-            {title: 'Chức Năng', class: 'text-center', width: '15%'}
-        ]
-    }
-    formList(){
-        return [
-            { title: 'Email', type: 'email', col: 6, class: 'email form-control ', id: 'email', value: '', placeholder: 'Ví dụ: abc@gmail.com', require: false, disabled: false },
-            { title: 'Điện Thoại', type: 'tel', col: 6, class: 'phone form-control ', id: 'phone', value: '', placeholder: 'Ví dụ: 0333.444.555', require: false, disabled: false },
-            { title: 'Mật Khẩu', type: 'password', col: 6, class: 'password form-control ', id: 'password', value:'', placeholder: '******', require: false, disabled: false },
-            { title: 'Xác Nhận Mật Khẩu', type: 'password', col: 6, class: 're_password form-control ', id: 're_password', value:'', placeholder: '******', require: false, disabled: false },
+            { title: 'Email', type: 'email', col: 6, class: 'email form-control ', id: 'email', value: (data.length==0)?'':data[0]['email'], placeholder: 'Ví dụ: abc@gmail.com', require: false, disabled: false, check: true },
+            { title: 'Điện Thoại', type: 'tel', col: 6, class: 'phone form-control ', id: 'phone', value: (data.length==0)?'':data[0]['phone'], placeholder: 'Ví dụ: 0333.444.555', require: false, disabled: false, check: true },
+            { title: 'Mật Khẩu', type: 'password', col: 6, class: 'password form-control ', id: 'password', value:'', placeholder: '******', require: false, disabled: (data.length==0)?false:true, check: true },
+            { title: 'Xác Nhận Mật Khẩu', type: 'password', col: 6, class: 're_password form-control ', id: 're_password', value:'', placeholder: '******', require: false, disabled: (data.length==0)?false:true, check: true },
         ]
     }
     theadList(){

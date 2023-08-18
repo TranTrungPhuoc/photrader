@@ -49,10 +49,11 @@
                             window.location.href = '/admin/<%-module%>/index'
                         }
                     }else{
-                        for (let index = 0; index < results.length; index++) {
-                            const key = $('.error_'+results[index]['key']);
-                            key.text(results[index]['error'])
-                        }
+                        $('.error').text('')
+                        results.forEach((e)=>{
+                            const key=Object.keys(e)[0]
+                            $('.error_'+key).text(e[key])
+                        })
                     }
                 } 
             })

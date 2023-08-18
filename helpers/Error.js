@@ -1,5 +1,5 @@
 class Error{
-    index(key, field){
+    index(key, field, so=0){
         let str=''
         switch (key) {
             case 401: str=field + ' không được rỗng !!!'; break;

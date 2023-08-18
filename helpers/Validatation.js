@@ -15,11 +15,15 @@ class Validation{
     }
     
     checkMaxLength(value, number){
-        return value!=undefined && value.length > number ? true : false
+        return value!=undefined && value.length >= number ? true : false
     }
 
     checkMinLength(value, number){
         return value!=undefined && value.length < number ? true : false
+    }
+
+    checkCompare(valueOne, valueTwo){
+        return (valueOne!=undefined && valueTwo!=undefined &&valueOne.trim()==valueTwo.trim()) ? true: false 
     }
 
     // async checkFieldExist(field, _id){
@@ -34,16 +38,6 @@ class Validation{
     //     }
     //     return {key, error}
     // }
-    // async checkCompare(){
-    //     const key='re_password'; let error='';
-    //     if(this.req.body['password']!=undefined && this.req.body['re_password']!=undefined){
-    //         if(this.req.body['password']!=this.req.body['re_password']){
-    //             error=this.errorCode(405)
-    //         } 
-    //     }
-    //     return {key, error}
-    // }
-    
 }
 
 module.exports = new Validation

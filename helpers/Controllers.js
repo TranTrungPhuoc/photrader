@@ -5,7 +5,6 @@ const salt = bcrypt.genSaltSync(10);
 const moment = require('moment');
 const mongoose = require('mongoose');
 const Validation=require('./Validatation')
-const ErrorCode=require('./Error')
 const Convert=require('./Convert')
 class Controllers{
     
@@ -98,7 +97,8 @@ class Controllers{
     async index(array=[]){ await this.res.render('index', { aside: this.aside(), module: this.module, main: await this.main(array) }) }
 
     async formHTML(id){
-        const array = await this.formList()
+        const data=await this.model.getDetail({_id: new mongoose.Types.ObjectId(id)})
+        const array=await this.formList(data)
         let str='';
         for (let index = 0; index < array.length; index++) {
             str+=Html.div('col-md-'+array[index]['col'], 
@@ -121,35 +121,15 @@ class Controllers{
     }
 
     async process(){
+        const id=this.req.query['id']
         let error=[];
-        error=this.checkForm()
-        // console.log(error);
-        // return
-        // let flag=1
-        // for (let index = 0; index < array.length; index++) { if(array[index]['error']!='') flag=0; }
-        // if(flag==1){
-        //     if(this.req.body['password']!=undefined) this.req.body['password'] = bcrypt.hashSync(this.req.body['password'], salt);
-        //     if(_id!=undefined){
-        //         await this.model.update({_id: new mongoose.Types.ObjectId(_id)}, this.req.body)
-        //     }else{
-        //         await this.model.create(this.req.body)
-        //     }
-        //     return this.res.send([])
-        // }
-        // else{ return this.res.send(array) }
-
+        error=this.checkForm(id)
         if(error.length == 0){
-            const id=this.req.query['id']
             if(this.req.body['password']!=undefined){ this.req.body['password'] = bcrypt.hashSync(this.req.body['password'], salt); }
             (id == 'undefined') ? await this.model.create(this.req.body) : await this.model.update(this.objectId(id), this.req.body);
         }
-
         return this.res.send(error)
     }
-
-    // response(code, field){
-    //     return this.res.send({key: field, error: ErrorCode(code, Convert(field))})
-    // }
 
     checkFormatEmail(){
         return Validation.checkEmail(this.getValue('email'))
@@ -157,6 +137,14 @@ class Controllers{
 
     checkFormatPhone(){
         return Validation.checkPhone(this.getValue('phone'))
+    }
+
+    checkPasswordLength(number){
+        return Validation.checkMaxLength(this.getValue('password'), number)
+    }
+
+    checkPasswordCompare(){
+        return Validation.checkCompare(this.getValue('password'), this.getValue('re_password'))
     }
 
     objectId(id){
@@ -184,8 +172,8 @@ class Controllers{
         return await this.model.getFull(this.search(key),'_id') 
     }
 
-    async theadCommon(){
-        const array = await this.arrayThead()
+    theadCommon(){
+        const array = this.theadList()
         let th=''; for (let index = 0; index < array.length; index++) { th+=Html.th(array[index]['title'], array[index]['class'], array[index]['width']) }
         return Html.thead(Html.tr(th))
     }
