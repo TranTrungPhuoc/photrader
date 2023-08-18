@@ -16,13 +16,21 @@ class Html{
 
     // form
     form(value='', id='formData'){ return '<form id="'+id+'">'+value+'</form>'; }
-    input(type='text', _class='', id='', value='', placeholder='', require=false, disabled=false){ return '<input type="'+type+'" class="'+_class+'" id="'+id+'" name="'+id+'" value="'+value+'" placeholder="'+placeholder+'"'+(require==true?' required':'')+(disabled==true?' disabled':'')+' />';}
-    option(value='', name=''){ return '<option value="'+value+'">' + name + '</option>'; }
-    select(array=[], _class='', id=''){let str=''; for (let index = 0; index < array.length; index++) { str+=this.option(array[index]['value'], array[index]['name'])} return '<select class="'+_class+'" id="'+id+'">' + str + '</select>'; }
-    textarea(rows=3, value='', _class='', id=''){ return '<textarea rows="'+rows+'" class="'+_class+'" id="'+id+'">' + value + '</textarea>'; }
+    input(type='text', _class='', id='', value='', placeholder='', require=false, disabled=false, event=''){ return '<input type="'+type+'" class="'+_class+'" id="'+id+'" name="'+id+'" value="'+value+'" placeholder="'+placeholder+'"'+(require==true?' required':'')+(disabled==true?' disabled':'')+' '+event+' />';}
+    option(value='', name='', selected=''){ return '<option value="'+value+'" '+selected+'>' + name + '</option>'; }
+    select(array=[], _class='', id='', value=''){
+        let str='<option value="">-Chọn-</option>'; 
+        for (let index = 0; index < array.length; index++) { 
+            const selected = (array[index]['value']==value) ? 'selected':''
+            str+=this.option(array[index]['value'], array[index]['name'], selected)
+        } 
+        return '<select class="'+_class+'" id="'+id+'" name="'+id+'">' + str + '</select>'; 
+    }
+    textarea(rows=3, value='', _class='', id='', placeholder=''){ return '<textarea rows="'+rows+'" class="'+_class+'" id="'+id+'" name="'+id+'" placeholder="'+placeholder+'">' + value + '</textarea>'; }
     submit(_class='', value=''){ return '<button type="submit" class="'+_class+'">'+value+'</button>'; }
     button(value='',_class='', _add='', _event=''){ return '<button type="button" class="btn '+_class+'" '+_add+' onclick="'+_event+'">'+value+'</button>'; }
     label(name='', _class=''){ return '<label class="'+_class+'">'+name+'</label>'; }
+    ckeditor(rows=3, value='', _class='', id='', placeholder=''){ return '<textarea rows="'+rows+'" class="'+_class+'" id="'+id+'" placeholder="'+placeholder+'">' + value + '</textarea>'; }
 
     // link
     a(value='', link='', _class='nav-link'){ return '<a href="'+link+'" class="'+_class+'">' + value + '</a>';}

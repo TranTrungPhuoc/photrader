@@ -51,7 +51,9 @@ class Controllers{
     }
 
     formContent(array){
-        return Html.div('card-body', Html.div('card-body', Html.form(Html.div('row', array) + Html.div('', '<br />' + Html.submit('btn btn-outline-primary has-ripple', 'Lưu') + '&nbsp;' + Html.a('Thoát','/admin/'+this.module+'/index', 'btn btn-outline-secondary has-ripple')) + Html.div('loading', '<br/>' + Html.spiner()))))
+        const saveHTML = Html.submit('btn btn-outline-primary has-ripple', 'Lưu')
+        const exitHTML = Html.a('Thoát','/admin/'+this.module+'/index', 'btn btn-outline-secondary has-ripple')
+        return Html.div('card-body', Html.div('card-body', Html.form(Html.div('row', array) + Html.div('save', Html.div('mt-3', saveHTML + '&nbsp;' + exitHTML) ) + Html.div('loading', '<br/>' + Html.spiner()))))
     }
 
     action(){
@@ -98,14 +100,21 @@ class Controllers{
 
     async formHTML(id){
         const data=await this.model.getDetail({_id: new mongoose.Types.ObjectId(id)})
-        const array=await this.formList(data)
+        const array=this.formList(data)
         let str='';
         for (let index = 0; index < array.length; index++) {
+            let typeHtml=Html.input(array[index]['type'], array[index]['class'], array[index]['id'], array[index]['value'], array[index]['placeholder'], array[index]['require'], array[index]['disabled'], array[index]['event']);
+            if(array[index]['type']=='textarea'){
+                typeHtml=Html.textarea(array[index]['row'], array[index]['value'], array[index]['class'], array[index]['id'], array[index]['placeholder'])
+            }
+            else if(array[index]['type']=='select'){
+                typeHtml=Html.select(array[index]['array'], array[index]['class'], array[index]['id'], data[0][array[index]['id']])
+            }
+            else if(array[index]['type']=='ckeditor'){
+                typeHtml=Html.ckeditor(array[index]['row'], array[index]['value'], array[index]['class'], array[index]['id'], array[index]['placeholder'])
+            }
             str+=Html.div('col-md-'+array[index]['col'], 
-            Html.div('form-group fill', Html.label(array[index]['title'],'form-label') + 
-                Html.input(array[index]['type'], array[index]['class'], array[index]['id'], array[index]['value'], array[index]['placeholder'], array[index]['require'], array[index]['disabled']) +
-                Html.span('error error_'+array[index]['id'])
-            ))
+            Html.div('form-group fill', Html.label(array[index]['title'],'form-label') + typeHtml + Html.span('error error_'+array[index]['id'])))
         }
         if(id!=undefined){str+=Html.input('hidden','','idEdit',id)}
         return str;

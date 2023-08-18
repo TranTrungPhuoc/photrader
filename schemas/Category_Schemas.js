@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const schema = new mongoose.Schema({
     title: { type: String, require: true, unique: true },
-    slug: { type: String, default: '' },
+    slug: { type: String, require: true, unique: true },
     parentID: { type: mongoose.Types.ObjectId, default: null },
     userID: { type: mongoose.Types.ObjectId, default: null },
     description: { type: String, default: '' },

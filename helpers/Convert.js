@@ -3,6 +3,8 @@ class Convert{
         let str='';
         switch (key) {
             case 'user': str='Thành Viên'; break;
+            case 'title': str='Tên'; break;
+            case 'slug': str='Slug'; break;
             case 'post': str='Bài Viết'; break;
             case 'category': str='Danh Mục'; break;
             case 'email': str='Email'; break;

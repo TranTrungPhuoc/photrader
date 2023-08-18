@@ -9,6 +9,7 @@ class User_Controllers extends Controllers{
     constructor(req, res){
         super(req, res)
         this.model = User_Models
+        this.title = 'email'
     }
 
     async checkForm(id){
@@ -64,10 +65,10 @@ class User_Controllers extends Controllers{
 
     formList(data){
         return [
-            { title: 'Email', type: 'email', col: 6, class: 'email form-control ', id: 'email', value: (data.length==0)?'':data[0]['email'], placeholder: 'Ví dụ: abc@gmail.com', require: false, disabled: false, check: true },
-            { title: 'Điện Thoại', type: 'tel', col: 6, class: 'phone form-control ', id: 'phone', value: (data.length==0)?'':data[0]['phone'], placeholder: 'Ví dụ: 0333.444.555', require: false, disabled: false, check: true },
-            { title: 'Mật Khẩu', type: 'password', col: 6, class: 'password form-control ', id: 'password', value:'', placeholder: '******', require: false, disabled: (data.length==0)?false:true, check: true },
-            { title: 'Xác Nhận Mật Khẩu', type: 'password', col: 6, class: 're_password form-control ', id: 're_password', value:'', placeholder: '******', require: false, disabled: (data.length==0)?false:true, check: true },
+            { title: 'Email', type: 'email', col: 6, class: 'email form-control ', id: 'email', value: (data.length==0)?'':data[0]['email'], placeholder: 'Ví dụ: abc@gmail.com', require: false, disabled: false, check: true, event: '' },
+            { title: 'Điện Thoại', type: 'tel', col: 6, class: 'phone form-control ', id: 'phone', value: (data.length==0)?'':data[0]['phone'], placeholder: 'Ví dụ: 0333.444.555', require: false, disabled: false, check: true, event: '' },
+            { title: 'Mật Khẩu', type: 'password', col: 6, class: 'password form-control ', id: 'password', value:'', placeholder: '******', require: false, disabled: (data.length==0)?false:true, check: true, event: '' },
+            { title: 'Xác Nhận Mật Khẩu', type: 'password', col: 6, class: 're_password form-control ', id: 're_password', value:'', placeholder: '******', require: false, disabled: (data.length==0)?false:true, check: true, event: '' },
         ]
     }
 
@@ -81,14 +82,14 @@ class User_Controllers extends Controllers{
     }
 
     async tbodyList(){
-        const array = await this.dataCommon('email')
+        const array = await this.dataCommon(this.title)
         let tr='';
         for (let index = 0; index < array.length; index++) {
             let td='';
-            td+=Html.td(array[index]['email'])
+            td+=Html.td(array[index][this.title])
             td+=this.tdDate(array[index]['created'])
             td+=this.tdStatus(array[index]['_id'], array[index]['status'])
-            td+=this.tdFunction(array[index]['_id'], this.params(2), array[index]['email'])
+            td+=this.tdFunction(array[index]['_id'], this.params(2), array[index][this.title])
             tr+=Html.tr(td,array[index]['_id'])
         }
         return Html.tbody(tr)
