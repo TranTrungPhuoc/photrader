@@ -100,7 +100,7 @@ class Controllers{
 
     async formHTML(id){
         const data=await this.model.getDetail({_id: new mongoose.Types.ObjectId(id)})
-        const array=this.formList(data)
+        const array=await this.formList(data)
         let str='';
         for (let index = 0; index < array.length; index++) {
             let typeHtml=Html.input(array[index]['type'], array[index]['class'], array[index]['id'], array[index]['value'], array[index]['placeholder'], array[index]['require'], array[index]['disabled'], array[index]['event']);
@@ -108,12 +108,12 @@ class Controllers{
                 typeHtml=Html.textarea(array[index]['row'], array[index]['value'], array[index]['class'], array[index]['id'], array[index]['placeholder'])
             }
             else if(array[index]['type']=='select'){
-                typeHtml=Html.select(array[index]['array'], array[index]['class'], array[index]['id'], data[0][array[index]['id']])
+                typeHtml=Html.select(array[index]['array'], array[index]['class'], array[index]['id'], (id!=undefined)?data[0][array[index]['id']]:'')
             }
             else if(array[index]['type']=='ckeditor'){
                 typeHtml=Html.ckeditor(array[index]['row'], array[index]['value'], array[index]['class'], array[index]['id'], array[index]['placeholder'])
             }
-            str+=Html.div('col-md-'+array[index]['col'], 
+            str+=Html.div('col-md-'+array[index]['col']+((array[index]['type']=='hidden')?' d-none':''), 
             Html.div('form-group fill', Html.label(array[index]['title'],'form-label') + typeHtml + Html.span('error error_'+array[index]['id'])))
         }
         if(id!=undefined){str+=Html.input('hidden','','idEdit',id)}
@@ -224,7 +224,7 @@ class Controllers{
         return Html.button(Html.icon('trash'),'btn btn-sm btn-outline-danger has-ripple', ' data-bs-toggle="modal" data-bs-target="#deleteModal"', "popupDelete('"+id+"', '"+value+"')")
     }
     tdFunction(id, module, value){
-        return Html.td(this.tdEdit(id, module) + '&nbsp;' + this.tdDelete(id, value))
+        return Html.td(this.tdEdit(id, module) + '&nbsp;' + this.tdDelete(id, value), 'text-center')
     }
 }
 module.exports = Controllers

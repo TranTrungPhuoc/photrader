@@ -1,5 +1,5 @@
 const Models = require('../helpers/Models')
-const Schema = require('../schemas/Category_Schemas')
+const Schema = require('../schemas/Category_Schema')
 class Category_Models extends Models{
     constructor(table){
         super(table)

@@ -36,7 +36,10 @@
             for (let index = 0; index < array.length; index++) {
                 data[array[index].name] = array[index].value
             }
-            data['content'] = CKEDITOR.instances['content'].getData();
+            const module = '<%-module%>';
+            if(module != 'menu' && module != 'user' && module != 'share'){
+                data['content'] = CKEDITOR.instances['content'].getData();
+            }
             const id=$('#idEdit').val()
             $.ajax({
                 url: '/admin/<%-module%>/process?id='+id,

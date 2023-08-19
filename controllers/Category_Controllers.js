@@ -13,7 +13,7 @@ class Category_Controllers extends Controllers{
     }
 
     async checkForm(id){
-        const formList=this.formList(id);
+        const formList=await this.formList(id);
         let errors = [];
         for (let index = 0; index < formList.length; index++) {
             const field=formList[index]['id']
@@ -55,10 +55,10 @@ class Category_Controllers extends Controllers{
         ];
     }
 
-    formList(data){
+    async formList(data){
         return [
-            { title: 'Tên Danh Mục', type: 'text', col: 4, class: 'title form-control ', id: 'title', value: (data.length==0)?'':data[0]['title'], placeholder: 'Ví dụ: Kiến Thức', require: false, disabled: false, check: true, event: 'onchange=titleChangeToSlug() onkeyup=titleChangeToSlug()' },
-            { title: 'Slug', type: 'text', col: 4, class: 'slug form-control ', id: 'slug', value: (data.length==0)?'':data[0]['slug'], placeholder: 'Ví dụ: abc-cbd', require: false, disabled: false, check: true, event: '' },
+            { title: 'Tên Danh Mục', type: 'text', col: 4, class: 'title form-control ', id: 'title', value: (data.length==0)?'':data[0]['title'], placeholder: 'Nhập Tên Danh Mục', require: false, disabled: false, check: true, event: 'onchange=titleChangeToSlug() onkeyup=titleChangeToSlug()' },
+            { title: 'Slug', type: 'text', col: 4, class: 'slug form-control ', id: 'slug', value: (data.length==0)?'':data[0]['slug'], placeholder: 'Nhập Slug', require: false, disabled: false, check: true, event: '' },
             { title: 'Loại', type: 'select', col: 4, class: 'type form-control ', id: 'type', array: this.typeList(), require: false, disabled: false, check: false, event: '' },
             { title: 'Mô tả', type: 'textarea', col: 12, class: 'description form-control ', id: 'description', value: (data.length==0)?'':data[0]['description'], placeholder: 'Nhập mô tả...', row: 3, check: false },
             { title: 'Nội Dung', type: 'ckeditor', col: 12, class: 'content form-control ', id: 'content', value: (data.length==0)?'':data[0]['content'], placeholder: 'Nhập nội dung...', row: 3, check: false },

@@ -19,9 +19,9 @@ class Html{
     input(type='text', _class='', id='', value='', placeholder='', require=false, disabled=false, event=''){ return '<input type="'+type+'" class="'+_class+'" id="'+id+'" name="'+id+'" value="'+value+'" placeholder="'+placeholder+'"'+(require==true?' required':'')+(disabled==true?' disabled':'')+' '+event+' />';}
     option(value='', name='', selected=''){ return '<option value="'+value+'" '+selected+'>' + name + '</option>'; }
     select(array=[], _class='', id='', value=''){
-        let str='<option value="">-Chọn-</option>'; 
+        let str='<option value="">__Chọn__</option>'; 
         for (let index = 0; index < array.length; index++) { 
-            const selected = (array[index]['value']==value) ? 'selected':''
+            const selected = (array[index]['value']==value.toString()) ? 'selected':''
             str+=this.option(array[index]['value'], array[index]['name'], selected)
         } 
         return '<select class="'+_class+'" id="'+id+'" name="'+id+'">' + str + '</select>'; 
