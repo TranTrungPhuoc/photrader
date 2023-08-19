@@ -2,6 +2,8 @@ class Convert{
     index(key){
         let str='';
         switch (key) {
+            case 'schedule': str='Lịch Học'; break;
+            case 'course': str='Khóa Học'; break;
             case 'share': str='Chia Sẻ Kèo'; break;
             case 'menu': str='Menu'; break;
             case 'user': str='Thành Viên'; break;
