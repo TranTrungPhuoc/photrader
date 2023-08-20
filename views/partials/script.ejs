@@ -3,6 +3,10 @@
 <script src="/assets/js/ripple.js"></script>
 <script src="/assets/js/pcoded.min.js"></script>
 <script>
+    function getImage(src,id) {
+        $('.showImage img').attr('src', src);
+        $('#imageId').val(id)
+    }
     function status(id) {
         const status = $('#switch-'+id).prop('checked')
         $.ajax({
@@ -61,6 +65,29 @@
                             const key=Object.keys(e)[0]
                             $('.error_'+key).text(e[key])
                         })
+                    }
+                } 
+            })
+        })
+        $('#fileUpload').on('change', function(e){
+            let data = new FormData();
+            data.append('file', this.files[0])
+            const id =$('#imageId').val()
+            data.append('id', id)
+            $.ajax({
+                url: '/admin/<%-module%>/upload',
+                type: 'POST',
+                data,
+                contentType: false,
+                cache: false,
+                processData:false,
+                beforeSend: function(){ $('.loading').show() },
+                success: function(results){
+                    if(results['kq']==1){
+                        $('#tr_'+id + ' img').attr('src', results['path']);
+                        $('.showImage img').attr('src', results['path']);
+                    }else{
+                        console.log(results);
                     }
                 } 
             })

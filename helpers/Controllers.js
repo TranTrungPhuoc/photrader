@@ -218,8 +218,8 @@ class Controllers{
         const date = moment(value); return date.format('DD')+'/'+date.format('MM')+'/'+date.format('YYYY') 
     }
 
-    tdImage(image){
-        return Html.td(Html.image('image img-fluid img-radius wid-40', image, 'modal'), 'text-center')
+    tdImage(image, id){
+        return Html.td(Html.image('image img-fluid img-radius wid-40', image, 'modal', id), 'text-center')
     }
     tdDate(date){
         return Html.td(this.convertDate(date), 'text-center align-middle')
@@ -235,6 +235,17 @@ class Controllers{
     }
     tdFunction(id, module, value){
         return Html.td(this.tdEdit(id, module) + '&nbsp;' + this.tdDelete(id, value), 'text-center align-middle')
+    }
+    async upload(){
+        const id = this.req.body.id;
+        const avatar = this.res.locals.file['value']
+        const data = await this.model.getDetail(this.objectId(id))
+        await this.model.update(this.objectId(id), {avatar});
+        if(data[0]['avatar'] != ''){ 
+            const newFile = 'public' + this.res.locals.file['path'] + data[0]['avatar']
+            if (fs.existsSync(newFile)) { fs.unlinkSync(newFile) }
+        }
+        this.res.send({kq:1, path: this.res.locals.file['path'] + avatar })
     }
 }
 module.exports = Controllers

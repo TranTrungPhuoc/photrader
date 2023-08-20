@@ -30,15 +30,16 @@
             </div>
             <div class="modal-body">
                 <div class="imageUpload">
-                    <label for="file" class="form-label">Tải Ảnh</label>
-                    <input class="form-control" type="file" id="file">
+                    <label for="fileUpload" class="form-label">Tải Ảnh</label>
+                    <input class="form-control" type="file" name="file" id="fileUpload">
                 </div>
-                <div class="showImage">
-
+                <div class="showImage mt-3">
+                    <img src="" alt="" class="img-fluid img-radius wid-150">
+                    <input type="hidden" id="imageId"/>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Upload File</button>
+                <button type="button" class="btn btn-danger">Xóa Ảnh</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
             </div>
         </div>
