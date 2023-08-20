@@ -49,8 +49,8 @@ class Menu_Controllers extends Controllers{
 
     async formList(data){
         return [
-            { title: 'Tiêu Đề', type: 'text', col: 4, class: 'title form-control ', id: 'title', value: (data.length==0)?'':data[0]['title'], placeholder: 'Nhập Menu', require: false, disabled: false, check: true, event: '' },
-            { title: 'Link', type: 'text', col: 4, class: 'link form-control ', id: 'link', value: (data.length==0)?'':data[0]['link'], placeholder: 'Nhập Link', require: false, disabled: false, check: false, event: '' },
+            { title: 'Tiêu Đề', type: 'text', col: 4, class: 'title form-control ', id: 'title', value: (data.length==0)?'':data[0]['title'], placeholder: '', require: false, disabled: false, check: true, event: '' },
+            { title: 'Link', type: 'text', col: 4, class: 'link form-control ', id: 'link', value: (data.length==0)?'':data[0]['link'], placeholder: '', require: false, disabled: false, check: false, event: '' },
             { title: 'Vị Trí', type: 'select', col: 4, class: 'location form-control ', id: 'location', array: this.locationList(), require: false, disabled: false, check: false, event: '' }
         ]
     }

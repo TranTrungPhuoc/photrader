@@ -2,6 +2,7 @@ class Convert{
     index(key){
         let str='';
         switch (key) {
+            case 'mail': str='Cấu Hình Mail'; break;
             case 'library': str='Thư Viện Ảnh'; break;
             case 'home': str='Giao Diện Home'; break;
             case 'site': str='Cấu Hình Site'; break;

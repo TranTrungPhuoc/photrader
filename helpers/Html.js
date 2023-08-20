@@ -12,7 +12,7 @@ class Html{
     tr(value=[], id=''){ return '<tr id="tr_'+id+'">' + value + '</tr>';}
     thead(value=[]){ return '<thead>'+value+'</thead>'; }
     tbody(value=[]){ return '<tbody>'+value+'</tbody>'; }
-    table(thead='', tbody='', _class='table table-striped'){ return '<table class="'+_class+'">'+thead + tbody +'</table>';}
+    table(thead='', tbody='', _class='table table-bordered'){ return '<table class="'+_class+'">'+thead + tbody +'</table>';}
 
     // form
     form(value='', id='formData'){ return '<form id="'+id+'">'+value+'</form>'; }
@@ -45,7 +45,7 @@ class Html{
     div(_class='', value=''){ return '<div class="'+_class+'">' +value+ '</div>'; }
     p(_class='', value=''){ return '<p class="'+_class+'">' +value+ '</p>'; }
     section(_class='', value=''){ return '<section class="'+_class+'">' +value+ '</section>'; }
-    image(_class='image', src=''){ return '<img src="'+src+'" class="'+_class+'" />'; }
+    image(_class='image', src='', modal=''){ return '<img src="'+src+'" class="'+_class+'" '+(modal!=''?'data-bs-toggle="modal" data-bs-target="#imageModal"':'')+'/>'; }
     spiner(_color=''){ return '<div class="spinner-border '+_color+'" role="status"> <span class="sr-only">Loading...</span> </div>'; }
     switch(id, checked=''){ return this.div('switch d-inline', '<input type="checkbox" '+checked+' class="switcher-input" name="validation-switcher" id="switch-'+id+'" onChange="status('+"'"+id+"'"+')"><label for="switch-'+id+'" class="cr"></label>') }
 }

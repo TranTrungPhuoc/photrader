@@ -68,7 +68,7 @@ class Mail_Controllers extends Controllers{
             { title: 'Host', type: 'text', col: 6, class: 'host form-control ', id: 'host', value: (data.length==0)?'':data[0]['host'], placeholder: '', require: false, disabled: false, check: false, event: '' },
             { title: 'Port', type: 'text', col: 6, class: 'port form-control ', id: 'port', value: (data.length==0)?'':data[0]['port'], placeholder: '', require: false, disabled: false, check: false, event: '' },
             { title: 'Username', type: 'text', col: 6, class: 'username form-control ', id: 'username', value: (data.length==0)?'':data[0]['username'], placeholder: '', require: false, disabled: false, check: false, event: '' },
-            { title: 'Password', type: 'text', col: 6, class: 'password form-control ', id: 'password', value: (data.length==0)?'':data[0]['password'], placeholder: '', require: false, disabled: false, check: false, event: '' },
+            { title: 'Password', type: 'password', col: 6, class: 'password form-control ', id: 'password', value: (data.length==0)?'':data[0]['password'], placeholder: '', require: false, disabled: false, check: false, event: '' },
         ]
     }
 

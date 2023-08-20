@@ -28397,29 +28397,29 @@ body.box-layout .pcoded-navbar.theme-horizontal ~ .pcoded-header {
 }
 /* ====== [ Box end ] ======== */
 .form-control {
-    border: none;
-    border-bottom: 1px solid #ced4da;
+    /* border: none; */
+    /* border-bottom: 1px solid #ced4da; */
     background: no-repeat center bottom, center calc(100% - 1px);
     background-size: 0 100%, 100% 100%;
     transition: background 0s ease-out;
 }
 
-.form-control:focus {
+/* .form-control:focus {
     border-bottom-color: transparent;
     background-size: 100% 100%, 100% 100%;
     transition-duration: 0.3s;
     box-shadow: none;
     background-image: linear-gradient(to top, #4680ff 2px, rgba(70, 128, 255, 0) 2px), linear-gradient(to top, #ced4da 1px, rgba(206, 212, 218, 0) 1px);
-}
+} */
 
 .form-group {
     position: relative;
 }
 
-.form-group .form-control {
+/* .form-group .form-control {
     padding-left: 0;
     padding-right: 0;
-}
+} */
 
 .form-group .floating-label {
     position: absolute;

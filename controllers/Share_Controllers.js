@@ -55,13 +55,13 @@ class Share_Controllers extends Controllers{
     async formList(data){
         return [
             { title: 'Mã', type: 'hidden', col: 6, class: 'code form-control ', id: 'code', value: (data.length==0)?'PTD-'+this.makeid(5):data[0]['code'], placeholder: '', require: false, disabled: false, check: true, event: '' },
-            { title: 'Lệnh', type: 'text', col: 4, class: 'command form-control ', id: 'command', value: (data.length==0)?'':data[0]['command'], placeholder: 'Nhập Lệnh', require: false, disabled: false, check: true, event: '' },
-            { title: 'Entry', type: 'text', col: 4, class: 'entry form-control ', id: 'entry', value: (data.length==0)?'':data[0]['entry'], placeholder: 'Nhập Entry', require: false, disabled: false, check: true, event: '' },
-            { title: 'Sl', type: 'text', col: 4, class: 'sl form-control ', id: 'sl', value: (data.length==0)?'':data[0]['sl'], placeholder: 'Nhập Sl', require: false, disabled: false, check: true, event: '' },
-            { title: 'Tp', type: 'text', col: 4, class: 'tp form-control ', id: 'tp', value: (data.length==0)?'':data[0]['tp'], placeholder: 'Nhập Tp', require: false, disabled: false, check: true, event: '' },
-            { title: 'Link', type: 'text', col: 4, class: 'link form-control ', id: 'link', value: (data.length==0)?'':data[0]['link'], placeholder: 'Nhập Link', require: false, disabled: false, check: false, event: '' },
+            { title: 'Lệnh', type: 'text', col: 4, class: 'command form-control ', id: 'command', value: (data.length==0)?'':data[0]['command'], placeholder: '', require: false, disabled: false, check: true, event: '' },
+            { title: 'Entry', type: 'text', col: 4, class: 'entry form-control ', id: 'entry', value: (data.length==0)?'':data[0]['entry'], placeholder: '', require: false, disabled: false, check: true, event: '' },
+            { title: 'Sl', type: 'text', col: 4, class: 'sl form-control ', id: 'sl', value: (data.length==0)?'':data[0]['sl'], placeholder: '', require: false, disabled: false, check: true, event: '' },
+            { title: 'Tp', type: 'text', col: 4, class: 'tp form-control ', id: 'tp', value: (data.length==0)?'':data[0]['tp'], placeholder: '', require: false, disabled: false, check: true, event: '' },
+            { title: 'Link', type: 'text', col: 4, class: 'link form-control ', id: 'link', value: (data.length==0)?'':data[0]['link'], placeholder: '', require: false, disabled: false, check: false, event: '' },
             { title: 'Kết quả', type: 'select', col: 4, class: 'result form-control ', id: 'result', array: this.resultList(), require: false, disabled: false, check: false, event: '' },
-            { title: 'Mô tả', type: 'textarea', col: 12, class: 'description form-control ', id: 'description', value: (data.length==0)?'':data[0]['description'], placeholder: 'Nhập mô tả...', row: 3, check: false },
+            { title: 'Mô tả', type: 'textarea', col: 12, class: 'description form-control ', id: 'description', value: (data.length==0)?'':data[0]['description'], placeholder: '', row: 3, check: false },
         ]
     }
 

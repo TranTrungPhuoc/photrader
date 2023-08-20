@@ -66,7 +66,7 @@ class User_Controllers extends Controllers{
     async formList(data){
         return [
             { title: 'Email', type: 'email', col: 6, class: 'email form-control ', id: 'email', value: (data.length==0)?'':data[0]['email'], placeholder: 'Ví dụ: abc@gmail.com', require: false, disabled: false, check: true, event: '' },
-            { title: 'Điện Thoại', type: 'tel', col: 6, class: 'phone form-control ', id: 'phone', value: (data.length==0)?'':data[0]['phone'], placeholder: 'Ví dụ: 0333.444.555', require: false, disabled: false, check: true, event: '' },
+            { title: 'Điện Thoại', type: 'tel', col: 6, class: 'phone form-control ', id: 'phone', value: (data.length==0)?'':data[0]['phone'], placeholder: 'Ví dụ: 0333444555', require: false, disabled: false, check: true, event: '' },
             { title: 'Mật Khẩu', type: 'password', col: 6, class: 'password form-control ', id: 'password', value:'', placeholder: '******', require: false, disabled: (data.length==0)?false:true, check: true, event: '' },
             { title: 'Xác Nhận Mật Khẩu', type: 'password', col: 6, class: 're_password form-control ', id: 're_password', value:'', placeholder: '******', require: false, disabled: (data.length==0)?false:true, check: true, event: '' },
         ]

@@ -40,9 +40,9 @@ class Course_Controllers extends Controllers{
 
     async formList(data){
         return [
-            { title: 'Họ & Tên', type: 'text', col: 6, class: 'fullname form-control ', id: 'fullname', value: (data.length==0)?'':data[0]['fullname'], placeholder: 'Nhập Họ & Tên', require: false, disabled: false, check: true, event: '' },
-            { title: 'Email', type: 'email', col: 6, class: 'email form-control ', id: 'email', value: (data.length==0)?'':data[0]['email'], placeholder: 'Nhập Email', require: false, disabled: false, check: true, event: '' },
-            { title: 'Điện Thoại', type: 'tel', col: 6, class: 'phone form-control ', id: 'phone', value: (data.length==0)?'':data[0]['phone'], placeholder: 'Nhập Điện Thoại', require: false, disabled: false, check: true, event: '' },
+            { title: 'Họ & Tên', type: 'text', col: 6, class: 'fullname form-control ', id: 'fullname', value: (data.length==0)?'':data[0]['fullname'], placeholder: '', require: false, disabled: false, check: true, event: '' },
+            { title: 'Email', type: 'email', col: 6, class: 'email form-control ', id: 'email', value: (data.length==0)?'':data[0]['email'], placeholder: '', require: false, disabled: false, check: true, event: '' },
+            { title: 'Điện Thoại', type: 'tel', col: 6, class: 'phone form-control ', id: 'phone', value: (data.length==0)?'':data[0]['phone'], placeholder: '', require: false, disabled: false, check: true, event: '' },
             { title: 'Lịch Học', type: 'select', col: 6, class: 'schedule form-control ', id: 'schedule', array: this.schedule(), require: false, disabled: false, check: true, event: '' },
         ]
     }

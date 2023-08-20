@@ -52,7 +52,14 @@ class Controllers{
 
     formContent(array){
         const saveHTML = Html.submit('btn btn-outline-primary has-ripple', 'Lưu')
-        const exitHTML = Html.a('Thoát','/admin/'+this.module+'/index', 'btn btn-outline-secondary has-ripple')
+        let module=this.module
+        if(
+            this.req.originalUrl.includes('site') ||
+            this.req.originalUrl.includes('mail')
+        ){
+            module='dashboard';
+        }
+        const exitHTML = Html.a('Thoát','/admin/'+module+'/index', 'btn btn-outline-secondary has-ripple')
         return Html.div('card-body', Html.div('card-body', Html.form(Html.div('row', array) + Html.div('save', Html.div('mt-3', saveHTML + '&nbsp;' + exitHTML) ) + Html.div('loading', '<br/>' + Html.spiner()))))
     }
 
@@ -211,8 +218,11 @@ class Controllers{
         const date = moment(value); return date.format('DD')+'/'+date.format('MM')+'/'+date.format('YYYY') 
     }
 
+    tdImage(){
+        return Html.td(Html.image('image img-fluid img-radius wid-40', '/assets/images/photrader.jpeg', 'modal'), 'text-center')
+    }
     tdDate(date){
-        return Html.td(this.convertDate(date), 'text-center')
+        return Html.td(this.convertDate(date), 'text-center align-middle')
     }
     tdStatus(id, status){
         return Html.td(Html.switch(id, (status==true?'checked':'')), 'text-center')
@@ -224,7 +234,7 @@ class Controllers{
         return Html.button(Html.icon('trash'),'btn btn-sm btn-outline-danger has-ripple', ' data-bs-toggle="modal" data-bs-target="#deleteModal"', "popupDelete('"+id+"', '"+value+"')")
     }
     tdFunction(id, module, value){
-        return Html.td(this.tdEdit(id, module) + '&nbsp;' + this.tdDelete(id, value), 'text-center')
+        return Html.td(this.tdEdit(id, module) + '&nbsp;' + this.tdDelete(id, value), 'text-center align-middle')
     }
 }
 module.exports = Controllers

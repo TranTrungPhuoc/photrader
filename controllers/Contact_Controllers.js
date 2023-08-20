@@ -40,10 +40,10 @@ class Contact_Controllers extends Controllers{
 
     async formList(data){
         return [
-            { title: 'Họ & Tên', type: 'text', col: 4, class: 'fullname form-control ', id: 'fullname', value: (data.length==0)?'':data[0]['fullname'], placeholder: 'Nhập Họ & Tên', require: false, disabled: false, check: true, event: '' },
-            { title: 'Email', type: 'email', col: 4, class: 'email form-control ', id: 'email', value: (data.length==0)?'':data[0]['email'], placeholder: 'Nhập Email', require: false, disabled: false, check: true, event: '' },
-            { title: 'Điện Thoại', type: 'tel', col: 4, class: 'phone form-control ', id: 'phone', value: (data.length==0)?'':data[0]['phone'], placeholder: 'Nhập Điện Thoại', require: false, disabled: false, check: true, event: '' },
-            { title: 'Nội Dung', type: 'textarea', col: 12, class: 'content form-control ', id: 'fullcontentname', value: (data.length==0)?'':data[0]['content'], placeholder: 'Nhập Nội Dung', require: false, disabled: false, check: false, event: '' },
+            { title: 'Họ & Tên', type: 'text', col: 4, class: 'fullname form-control ', id: 'fullname', value: (data.length==0)?'':data[0]['fullname'], placeholder: '', require: false, disabled: false, check: true, event: '' },
+            { title: 'Email', type: 'email', col: 4, class: 'email form-control ', id: 'email', value: (data.length==0)?'':data[0]['email'], placeholder: '', require: false, disabled: false, check: true, event: '' },
+            { title: 'Điện Thoại', type: 'tel', col: 4, class: 'phone form-control ', id: 'phone', value: (data.length==0)?'':data[0]['phone'], placeholder: '', require: false, disabled: false, check: true, event: '' },
+            { title: 'Nội Dung', type: 'textarea', col: 12, class: 'content form-control ', id: 'fullcontentname', value: (data.length==0)?'':data[0]['content'], placeholder: '', require: false, disabled: false, check: false, event: '' },
         ]
     }
 
