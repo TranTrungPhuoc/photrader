@@ -2,6 +2,10 @@ class Convert{
     index(key){
         let str='';
         switch (key) {
+            case 'contact': str='Liên Hệ'; break;
+            case 'location': str='Vị Trí'; break;
+            case 'svg': str='Svg'; break;
+            case 'network': str='Mạng Xã Hội'; break;
             case 'schedule': str='Lịch Học'; break;
             case 'course': str='Khóa Học'; break;
             case 'share': str='Chia Sẻ Kèo'; break;

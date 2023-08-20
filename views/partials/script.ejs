@@ -37,12 +37,7 @@
                 data[array[index].name] = array[index].value
             }
             const module = '<%-module%>';
-            if(
-                module != 'menu' && 
-                module != 'user' && 
-                module != 'share' &&
-                module != 'course'
-            ){
+            if(module == 'post' || module == 'category'){
                 data['content'] = CKEDITOR.instances['content'].getData();
             }
             const id=$('#idEdit').val()
