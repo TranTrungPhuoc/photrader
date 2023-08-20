@@ -62,12 +62,14 @@ class Library_Controllers extends Controllers{
         let tr='';
         for (let index = 0; index < array.length; index++) {
             let td='';
-            td+=this.tdImage()
-            td+=Html.td(array[index][this.title], ' align-middle')
-            td+=this.tdDate(array[index]['created'])
-            td+=this.tdStatus(array[index]['_id'], array[index]['status'])
-            td+=this.tdFunction(array[index]['_id'], this.params(2), array[index][this.title])
-            tr+=Html.tr(td,array[index]['_id'])
+            const element = array[index]
+            const image = element['avatar']!=''??'/assets/images/photrader.jpeg';
+            td+=this.tdImage(image)
+            td+=Html.td(element[this.title], ' align-middle')
+            td+=this.tdDate(element['created'])
+            td+=this.tdStatus(element['_id'], element['status'])
+            td+=this.tdFunction(element['_id'], this.params(2), element[this.title])
+            tr+=Html.tr(td,element['_id'])
         }
         return Html.tbody(tr)
     }

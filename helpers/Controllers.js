@@ -218,8 +218,8 @@ class Controllers{
         const date = moment(value); return date.format('DD')+'/'+date.format('MM')+'/'+date.format('YYYY') 
     }
 
-    tdImage(){
-        return Html.td(Html.image('image img-fluid img-radius wid-40', '/assets/images/photrader.jpeg', 'modal'), 'text-center')
+    tdImage(image){
+        return Html.td(Html.image('image img-fluid img-radius wid-40', image, 'modal'), 'text-center')
     }
     tdDate(date){
         return Html.td(this.convertDate(date), 'text-center align-middle')
