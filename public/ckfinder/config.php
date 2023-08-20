@@ -122,7 +122,7 @@ ATTENTION: The trailing slash is required.
 
 */
 
-$baseUrl = '/uploads/ckfinder/';
+$baseUrl = '/public/uploads/ckfinder/';
 
 $enabled = true;
 
