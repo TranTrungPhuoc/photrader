@@ -91,7 +91,7 @@ class Controllers{
         const array = JSON.parse(fs.readFileSync('aside.json')).data;
         let str='';
         for (let index = 0; index < array.length; index++) {
-            str += Html.li(Html.a(Html.span('pcoded-micon',Html.icon(array[index].icon)) + array[index].title,'/admin/' + array[index].link + '/index','nav-link has-ripple'), (this.params(2)==array[index].link?'nav-item active': 'nav-item'));
+            str += Html.li(Html.a(Html.span('pcoded-micon',Html.icon(array[index].icon)) + array[index].title,'/admin/' + array[index].link + '/' + array[index].home,'nav-link has-ripple'), (this.params(2)==array[index].link?'nav-item active': 'nav-item'));
         }
         return Html.ul(str)
     }

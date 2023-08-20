@@ -1,14 +1,14 @@
 const Controllers = require('../helpers/Controllers')
 const Html = require('../helpers/Html')
-const Menu_Models = require('../models/Menu_Models')
+const Home_Models = require('../models/Home_Models')
 const Validation=require('../helpers/Validatation')
 const Error=require('../helpers/Error')
 const Convert=require('../helpers/Convert')
-class Menu_Controllers extends Controllers{
+class Home_Controllers extends Controllers{
     
     constructor(req, res){
         super(req, res)
-        this.model = Menu_Models
+        this.model = Home_Models
         this.title = 'title'
     }
 
@@ -22,14 +22,6 @@ class Menu_Controllers extends Controllers{
                 const checkEmpty=Validation.checkEmpty(value)
                 if(!checkEmpty){
                     errors.push({ [field]: Error.index(401, Convert.index(field)) })
-                }else{
-                    if(field=='title'&&formList[index]['check']==true){
-                        if(errors.length==0){
-                            if(!await this.checkExistData(field, id)){
-                                errors.push({ [field]: Error.index(403, Convert.index(field)) })
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -40,18 +32,36 @@ class Menu_Controllers extends Controllers{
         return await this.dataFull(this.title);
     }
 
-    locationList(){
+    sectionList(){
         return [
-            {value: 'top', name: 'Top'},
-            {value: 'bottom', name: 'Bottom'}
-        ];
+            {value: 'part1', name: 'Phần 1'},
+            {value: 'part2', name: 'Phần 2'},
+            {value: 'part3', name: 'Phần 3'},
+            {value: 'part4', name: 'Phần 4'},
+            {value: 'part5', name: 'Phần 5'},
+            {value: 'part6', name: 'Phần 6'}
+        ]
+    }
+
+    topicList(){
+        return [
+            {value: 'category', name: 'Danh Mục'},
+            {value: 'share', name: 'Chia Sẻ Kèo'},
+            {value: 'course', name: 'Khóa Học'}
+        ]
+    }
+
+    valueList(){
+        return []
     }
 
     async formList(data){
         return [
-            { title: 'Tiêu Đề', type: 'text', col: 4, class: 'title form-control ', id: 'title', value: (data.length==0)?'':data[0]['title'], placeholder: 'Nhập Menu', require: false, disabled: false, check: true, event: '' },
-            { title: 'Link', type: 'text', col: 4, class: 'link form-control ', id: 'link', value: (data.length==0)?'':data[0]['link'], placeholder: 'Nhập Link', require: false, disabled: false, check: false, event: '' },
-            { title: 'Vị Trí', type: 'select', col: 4, class: 'location form-control ', id: 'location', array: this.locationList(), require: false, disabled: false, check: false, event: '' }
+            { title: 'Tiêu Đề', type: 'text', col: 4, class: 'title form-control ', id: 'title', value: (data.length==0)?'':data[0]['title'], placeholder: '', require: false, disabled: false, check: true, event: '' },
+            { title: 'Icon', type: 'text', col: 4, class: 'icon form-control ', id: 'icon', value: (data.length==0)?'':data[0]['icon'], placeholder: '', require: false, disabled: false, check: false, event: '' },
+            { title: 'Loại', type: 'select', col: 4, class: 'type form-control ', id: 'type', array: this.sectionList(), require: false, disabled: false, check: false, event: '' },
+            { title: 'Chủ Đề', type: 'select', col: 4, class: 'topic form-control ', id: 'topic', array: this.topicList(), require: false, disabled: false, check: false, event: '' },
+            { title: 'Giá Trị', type: 'select', col: 4, class: 'value form-control ', id: 'value', array: this.valueList(), require: false, disabled: false, check: false, event: '' },
         ]
     }
 
@@ -79,4 +89,4 @@ class Menu_Controllers extends Controllers{
     }
 
 }
-module.exports = Menu_Controllers
+module.exports = Home_Controllers

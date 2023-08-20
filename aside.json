@@ -1,15 +1,17 @@
 {
     "data": [
-        { "title": "Bảng Điều Khiển", "link": "dashboard", "icon": "home" },
-        { "title": "Danh Mục", "link": "category", "icon": "align-justify" },
-        { "title": "Bài Viết", "link": "post", "icon": "box" },
-        { "title": "Menu", "link": "menu", "icon": "align-left" },
-        { "title": "Chia Sẻ Kèo", "link": "share", "icon": "share-2" },
-        { "title": "Khóa Học", "link": "course", "icon": "book" },
-        { "title": "Cấu Hình Site", "link": "site", "icon": "settings" },
-        { "title": "Cài Đặt Mail", "link": "mail", "icon": "mail" },
-        { "title": "Mạng Xã Hội", "link": "network", "icon": "share-2" },
-        { "title": "Thành Viên", "link": "user", "icon": "users" },
-        { "title": "Liên Hệ", "link": "contact", "icon": "phone-call" }
+        { "title": "Bảng Điều Khiển", "link": "dashboard", "home": "index", "icon": "home" },
+        { "title": "Danh Mục", "link": "category", "home": "index", "icon": "align-justify" },
+        { "title": "Bài Viết", "link": "post", "home": "index", "icon": "box" },
+        { "title": "Menu", "link": "menu", "home": "index", "icon": "align-left" },
+        { "title": "Chia Sẻ Kèo", "link": "share", "home": "index", "icon": "share-2" },
+        { "title": "Khóa Học", "link": "course", "home": "index", "icon": "book" },
+        { "title": "Giao Diện Home", "link": "home", "home": "index", "icon": "layout" },
+        { "title": "Cấu Hình Site", "link": "site", "home": "form", "icon": "settings" },
+        { "title": "Cấu Hình Mail", "link": "mail", "home": "form", "icon": "settings" },
+        { "title": "Thư Viện Ảnh", "link": "library", "home": "index", "icon": "image" },
+        { "title": "Mạng Xã Hội", "link": "network", "home": "index", "icon": "share-2" },
+        { "title": "Liên Hệ", "link": "contact", "home": "index", "icon": "phone-call" },
+        { "title": "Thành Viên", "link": "user", "home": "index", "icon": "users" }
     ]
 }

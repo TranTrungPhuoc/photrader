@@ -60,7 +60,7 @@ class User_Controllers extends Controllers{
     }
 
     async arrayFull(){ 
-        return await this.dataFull('email');
+        return await this.dataFull(this.title);
     }
 
     async formList(data){
@@ -74,7 +74,7 @@ class User_Controllers extends Controllers{
 
     theadList(){
         return [
-            {title: 'Tên', class:'', width: ''},
+            {title: 'Email', class:'', width: ''},
             {title: 'Ngày Tạo', class: 'text-center', width: '15%'},
             {title: 'Hiển Thị', class: 'text-center', width: '10%'},
             {title: 'Chức Năng', class: 'text-center', width: '15%'}

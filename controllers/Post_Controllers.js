@@ -59,7 +59,7 @@ class Post_Controllers extends Controllers{
 
     async formList(data){
         return [
-            { title: 'Tên Bài Viết', type: 'text', col: 6, class: 'title form-control ', id: 'title', value: (data.length==0)?'':data[0]['title'], placeholder: 'Nhập Tên Bài Viết', require: false, disabled: false, check: true, event: 'onchange=titleChangeToSlug() onkeyup=titleChangeToSlug()' },
+            { title: 'Tiêu Đề', type: 'text', col: 6, class: 'title form-control ', id: 'title', value: (data.length==0)?'':data[0]['title'], placeholder: 'Nhập Tên Bài Viết', require: false, disabled: false, check: true, event: 'onchange=titleChangeToSlug() onkeyup=titleChangeToSlug()' },
             { title: 'Slug', type: 'text', col: 6, class: 'slug form-control ', id: 'slug', value: (data.length==0)?'':data[0]['slug'], placeholder: 'Nhập Slug', require: false, disabled: false, check: true, event: '' },
             { title: 'Danh Mục', type: 'select', col: 6, class: 'parentID form-control ', id: 'parentID', array: await this.category(), require: false, disabled: false, check: false, event: '' },
             { title: 'Video', type: 'text', col: 6, class: 'video form-control ', id: 'video', value: (data.length==0)?'':data[0]['video'], placeholder: 'Nhập Video', require: false, disabled: false, check: false, event: '' },
@@ -73,7 +73,7 @@ class Post_Controllers extends Controllers{
 
     theadList(){
         return [
-            {title: 'Tên', class:'', width: ''},
+            {title: 'Tiêu Đề', class:'', width: ''},
             {title: 'Ngày Tạo', class: 'text-center', width: '15%'},
             {title: 'Hiển Thị', class: 'text-center', width: '10%'},
             {title: 'Chức Năng', class: 'text-center', width: '15%'}
