@@ -95,5 +95,9 @@ class User_Controllers extends Controllers{
         return Html.tbody(tr)
     }
 
+    logout(){
+        this.res.clearCookie('user').redirect('/')
+    }
+
 }
 module.exports = User_Controllers

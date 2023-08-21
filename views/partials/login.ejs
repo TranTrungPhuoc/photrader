@@ -5,12 +5,9 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<!-- Favicon icon -->
 	<link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
-	<!-- vendor css -->
 	<link rel="stylesheet" href="assets/css/style.css">
 </head>
-<!-- [ auth-signin ] start -->
 <div class="auth-wrapper">
 	<div class="auth-content">
 		<div class="card">
@@ -28,13 +25,7 @@
 								<label class="floating-label" for="Password">Password</label>
 								<input type="password" class="form-control" id="Password" placeholder="" required>
 							</div>
-							<!-- <div class="form-check text-start mb-4 mt-2">
-								<input type="checkbox" class="form-check-input" id="customCheck1">
-								<label class="form-check-label" for="customCheck1">Save credentials.</label>
-							</div> -->
 							<button type="submit" class="btn btn-block btn-primary mb-4">Đăng Nhập</button>
-							<!-- <p class="mb-2 text-muted">Forgot password? <a href="auth-reset-password.html" class="f-w-400">Reset</a></p>
-							<p class="mb-0 text-muted">Don’t have an account? <a href="auth-signup.html" class="f-w-400">Signup</a></p> -->
 						</div>
 					</div>
 				</div>
@@ -42,8 +33,6 @@
 		</div>
 	</div>
 </div>
-<!-- [ auth-signin ] end -->
-<!-- Required Js -->
 <script src="assets/js/vendor-all.min.js"></script>
 <script src="assets/js/plugins/bootstrap.min.js"></script>
 <script src="assets/js/ripple.js"></script>
@@ -59,7 +48,9 @@ $(document).ready(function(){
 			type: 'POST',
 			data: {email, password},
 			success: function(results){
-				console.log(results);
+				(results['kq']==true) 
+				? window.location.href = '/admin/dashboard/index'
+				: alert('Đăng nhập thất bại !!!')
 			}
 		})
 		return false

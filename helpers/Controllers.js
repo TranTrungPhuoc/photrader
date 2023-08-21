@@ -103,7 +103,7 @@ class Controllers{
         return Html.ul(str)
     }
 
-    async index(array=[]){ await this.res.render('index', { aside: this.aside(), module: this.module, main: await this.main(array) }) }
+    async index(array=[]){ await this.res.render('index', { aside: this.aside(), module: this.module, main: await this.main(array), user: this.req.cookies.user[0] }) }
 
     async formHTML(id){
         const data=await this.model.getDetail({_id: new mongoose.Types.ObjectId(id)})
@@ -179,6 +179,10 @@ class Controllers{
         return {_id: new mongoose.Types.ObjectId(id)}
     }
 
+    objectField(field){
+        return {[field]: this.getValue(field)}
+    }
+
     async delete(){
         await this.model.delete(this.objectId(this.req.body.id))
         return this.res.send({code: 200})
@@ -246,6 +250,16 @@ class Controllers{
             if (fs.existsSync(newFile)) { fs.unlinkSync(newFile) }
         }
         this.res.send({kq:1, path: this.res.locals.file['path'] + avatar })
+    }
+    async login(){
+        const User_Models = require('../models/User_Models')
+        const checkEmail = await User_Models.getDetail(this.objectField('email'))
+        if(checkEmail.length == 0 || (checkEmail.length > 0 && !bcrypt.compareSync(this.getValue('password'), checkEmail[0]['password']))){
+            return this.res.send({kq: false});
+        }
+        const data = await User_Models.getFull(this.objectField('email'), 'email avatar')
+        this.res.cookie('user', data, {maxAge: 1000 * 60 * 60 * 6 });
+        return this.res.send({kq: true})
     }
 }
 module.exports = Controllers
