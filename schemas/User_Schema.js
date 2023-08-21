@@ -4,6 +4,7 @@ const schema = new mongoose.Schema({
     phone: { type: String, require: true, unique: true },
     password: { type: String, require: true },
     role: { type: String, default: 'user' },
+    userID: { type: mongoose.Types.ObjectId, default: null },
     status: { type: Boolean, default: true },
     created: { type: Date, default: new Date() },
     updated: { type: Date, default: null }

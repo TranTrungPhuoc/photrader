@@ -6,6 +6,7 @@ const schema = new mongoose.Schema({
     phone: { type: String, require: true },
     content: { type: String, require: true },
     status: { type: Boolean, default: true },
+    userID: { type: mongoose.Types.ObjectId, default: null },
     created: { type: Date, default: new Date() },
     updated: { type: Date, default: null }
 })

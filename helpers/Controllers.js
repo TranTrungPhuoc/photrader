@@ -142,7 +142,9 @@ class Controllers{
         error=await this.checkForm(id)
         if(error.length == 0){
             if(this.getValue['password']!=undefined){ this.req.body['password'] = bcrypt.hashSync(this.getValue['password'], salt); }
+            if(this.req.body['parentID']==''){ delete this.req.body['parentID']; }
             if(id == 'undefined'){
+                this.req.body['userID'] = this.req.cookies.user[0]['_id']
                 await this.model.create(this.req.body)
             }else{
                 this.req.body['updated'] = new Date()
@@ -253,7 +255,7 @@ class Controllers{
     }
     async login(){
         const User_Models = require('../models/User_Models')
-        const checkEmail = await User_Models.getDetail(this.objectField('email'))
+        const checkEmail = await User_Models.getDetail({email: this.getValue('email'), status: true})
         if(checkEmail.length == 0 || (checkEmail.length > 0 && !bcrypt.compareSync(this.getValue('password'), checkEmail[0]['password']))){
             return this.res.send({kq: false});
         }
