@@ -3,6 +3,7 @@ const schema = new mongoose.Schema({
     email: { type: String, require: true, unique: true },
     phone: { type: String, require: true, unique: true },
     password: { type: String, require: true },
+    avatar: { type: String, default: '' },
     role: { type: String, default: 'user' },
     userID: { type: mongoose.Types.ObjectId, default: null },
     status: { type: Boolean, default: true },
