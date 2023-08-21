@@ -63,7 +63,7 @@ class Library_Controllers extends Controllers{
         for (let index = 0; index < array.length; index++) {
             let td='';
             const element = array[index]
-            td+=this.tdImage(element['avatar']!=''?'/uploads/library/'+element['avatar']:'/assets/images/photrader.jpeg',element['_id'])
+            td+=this.tdImage(element['avatar']!=''?'/uploads/'+this.params(2)+'/'+element['avatar']:'/assets/images/photrader.jpeg',element['_id'])
             td+=Html.td(element[this.title], ' align-middle')
             td+=this.tdDate(element['created'])
             td+=this.tdStatus(element['_id'], element['status'])

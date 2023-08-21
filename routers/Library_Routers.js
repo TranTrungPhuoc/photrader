@@ -7,7 +7,6 @@ router.get('/edit/:id', (req, res) => new Controllers(req, res).form())
 router.post('/process', (req, res) => new Controllers(req, res).process())
 router.post('/delete', (req, res) => new Controllers(req, res).delete())
 router.post('/status', (req, res) => new Controllers(req, res).status())
-
 const multer  = require('multer')
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -36,7 +35,6 @@ const storage = multer.diskStorage({
 });
 const limits = {fileSize: 10240000};
 const upload = multer({ storage, limits }).single('file');
-
 router.post('/upload', function (req, res, next) {
     upload(req, res, function (err) {
         if (err instanceof multer.MulterError) {
