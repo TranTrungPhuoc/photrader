@@ -118,7 +118,7 @@ class Controllers{
                 typeHtml=Html.select(array[index]['array'], array[index]['class'], array[index]['id'], (id!=undefined)?data[0][array[index]['id']]:'')
             }
             else if(array[index]['type']=='ckeditor'){
-                typeHtml=Html.ckeditor(array[index]['row'], array[index]['value'], array[index]['class'], array[index]['id'], array[index]['placeholder'])
+                typeHtml=Html.ckeditor(array[index]['row'], array[index]['value'], array[index]['class'], array[index]['id'], array[index]['placeholder']) + Html.p('mt-3', Html.button('UploadFile','btn-outline-success has-ripple', 'data-bs-toggle="modal" data-bs-target="#libraryModal"', 'loadLibrary()'))
             }
             str+=Html.div('col-md-'+array[index]['col']+((array[index]['type']=='hidden')?' d-none':''), 
             Html.div('form-group fill', Html.label(array[index]['title'],'form-label') + typeHtml + Html.span('error error_'+array[index]['id'])))
@@ -186,7 +186,12 @@ class Controllers{
     }
 
     async delete(){
+        const data = await this.model.getDetail(this.objectId(this.req.body.id))
         await this.model.delete(this.objectId(this.req.body.id))
+        if(data[0]['avatar']!=''){
+            const path = 'public/uploads/'+this.params(2)+'/'+data[0]['avatar'];
+            if (fs.existsSync(path)) { fs.unlinkSync(path); }
+        }
         return this.res.send({code: 200})
     }
 
@@ -227,7 +232,7 @@ class Controllers{
         return Html.td(Html.span('badge bg-success', value), 'align-middle text-center')
     }
     tdImage(image, id){
-        return Html.td(Html.image('image img-fluid img-radius wid-40', image, 'modal', id), 'text-center')
+        return Html.td(Html.image('image wid-50', image, 'modal', id), 'text-center')
     }
     tdDate(date){
         return Html.td(this.convertDate(date), 'text-center align-middle')
@@ -254,6 +259,16 @@ class Controllers{
             if (fs.existsSync(newFile)) { fs.unlinkSync(newFile) }
         }
         this.res.send({kq:1, path: this.res.locals.file['path'] + avatar })
+    }
+    async load(){
+        const Library_Models = require('../models/Library_Models')
+        this.res.send({data: await Library_Models.getFull()})
+    }
+    async loadLibrary(){
+        const avatar = this.res.locals.file['value']
+        const Library_Models = require('../models/Library_Models')
+        await this.model.create({avatar, userID: this.req.cookies.user[0]['_id']})
+        this.res.send({data: await Library_Models.getFull()})
     }
     async login(){
         const User_Models = require('../models/User_Models')
