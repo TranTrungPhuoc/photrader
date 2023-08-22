@@ -49,7 +49,10 @@ class Course_Controllers extends Controllers{
 
     theadList(){
         return [
-            {title: 'Họ & Tên', class:'', width: ''},
+            {title: 'Họ & Tên', class:'text-center', width: ''},
+            {title: 'Email', class:'text-center', width: ''},
+            {title: 'Điện Thoại', class:'text-center', width: ''},
+            {title: 'Khóa Học', class:'text-center', width: ''},
             {title: 'Ngày Tạo', class: 'text-center', width: '15%'},
             {title: 'Hiển Thị', class: 'text-center', width: '10%'},
             {title: 'Chức Năng', class: 'text-center', width: '15%'}
@@ -61,11 +64,15 @@ class Course_Controllers extends Controllers{
         let tr='';
         for (let index = 0; index < array.length; index++) {
             let td='';
-            td+=Html.td(array[index][this.title])
-            td+=this.tdDate(array[index]['created'])
-            td+=this.tdStatus(array[index]['_id'], array[index]['status'])
-            td+=this.tdFunction(array[index]['_id'], this.params(2), array[index][this.title])
-            tr+=Html.tr(td,array[index]['_id'])
+            const element = array[index]
+            td+=Html.td(element[this.title], 'text-center')
+            td+=Html.td(element['email'], 'text-center')
+            td+=Html.td(element['phone'], 'text-center')
+            td+=this.tdType(element['schedule']+'.000.000')
+            td+=this.tdDate(element['created'])
+            td+=this.tdStatus(element['_id'], element['status'])
+            td+=this.tdFunction(element['_id'], this.params(2), element[this.title])
+            tr+=Html.tr(td,element['_id'])
         }
         return Html.tbody(tr)
     }

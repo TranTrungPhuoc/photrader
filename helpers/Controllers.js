@@ -223,7 +223,9 @@ class Controllers{
     convertDate(value){ 
         const date = moment(value); return date.format('DD')+'/'+date.format('MM')+'/'+date.format('YYYY') 
     }
-
+    tdType(value){
+        return Html.td(Html.span('badge bg-success', value), 'align-middle text-center')
+    }
     tdImage(image, id){
         return Html.td(Html.image('image img-fluid img-radius wid-40', image, 'modal', id), 'text-center')
     }

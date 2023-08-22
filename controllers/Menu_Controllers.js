@@ -58,6 +58,7 @@ class Menu_Controllers extends Controllers{
     theadList(){
         return [
             {title: 'Tiêu Đề', class:'', width: ''},
+            {title: 'Vị Trí', class: 'text-center', width: '10%'},
             {title: 'Ngày Tạo', class: 'text-center', width: '15%'},
             {title: 'Hiển Thị', class: 'text-center', width: '10%'},
             {title: 'Chức Năng', class: 'text-center', width: '15%'}
@@ -69,11 +70,13 @@ class Menu_Controllers extends Controllers{
         let tr='';
         for (let index = 0; index < array.length; index++) {
             let td='';
-            td+=Html.td(array[index][this.title])
-            td+=this.tdDate(array[index]['created'])
-            td+=this.tdStatus(array[index]['_id'], array[index]['status'])
-            td+=this.tdFunction(array[index]['_id'], this.params(2), array[index][this.title])
-            tr+=Html.tr(td,array[index]['_id'])
+            const element = array[index]
+            td+=Html.td(element[this.title], ' align-middle')
+            td+=this.tdType(element['location'])
+            td+=this.tdDate(element['created'])
+            td+=this.tdStatus(element['_id'], element['status'])
+            td+=this.tdFunction(element['_id'], this.params(2), element[this.title])
+            tr+=Html.tr(td,element['_id'])
         }
         return Html.tbody(tr)
     }

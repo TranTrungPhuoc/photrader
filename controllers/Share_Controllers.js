@@ -68,7 +68,12 @@ class Share_Controllers extends Controllers{
     theadList(){
         return [
             {title: 'Avatar', class:'text-center', width: '5%'},
-            {title: 'Lệnh', class:'', width: ''},
+            {title: 'Lệnh', class:'text-center', width: ''},
+            {title: 'Entry', class: 'text-center', width: ''},
+            {title: 'SL', class: 'text-center', width: ''},
+            {title: 'TP', class: 'text-center', width: ''},
+            {title: 'Link', class: 'text-center', width: ''},
+            {title: 'Kết Quả', class: 'text-center', width: ''},
             {title: 'Ngày Tạo', class: 'text-center', width: '15%'},
             {title: 'Hiển Thị', class: 'text-center', width: '10%'},
             {title: 'Chức Năng', class: 'text-center', width: '15%'}
@@ -82,7 +87,12 @@ class Share_Controllers extends Controllers{
             let td='';
             const element = array[index]
             td+=this.tdImage(element['avatar']!=''?'/uploads/'+this.params(2)+'/'+element['avatar']:'/assets/images/photrader.jpeg',element['_id'])
-            td+=Html.td(element[this.title], ' align-middle')
+            td+=Html.td(element[this.title], 'align-middle text-center')
+            td+=Html.td(element['entry'], 'align-middle text-center')
+            td+=Html.td(element['sl'], 'align-middle text-center')
+            td+=Html.td(element['tp'], 'align-middle text-center')
+            td+=Html.td(element['link'], 'align-middle text-center')
+            td+=this.tdType(element['result'])
             td+=this.tdDate(element['created'])
             td+=this.tdStatus(element['_id'], element['status'])
             td+=this.tdFunction(element['_id'], this.params(2), element[this.title])
