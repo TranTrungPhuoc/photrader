@@ -5,6 +5,7 @@ class Html{
     h3(value='', _class=''){ return '<h3 class="'+_class+'">'+value+'</h3>'; }
     h4(value='', _class=''){ return '<h4 class="'+_class+'">'+value+'</h4>'; }
     h5(value='', _class=''){ return '<h5 class="'+_class+'">'+value+'</h5>'; }
+    h6(value='', _class=''){ return '<h6 class="'+_class+'">'+value+'</h6>'; }
 
     // table
     td(value, _class=''){ return '<td class="'+_class+'">' + value +'</td>'; }
@@ -42,7 +43,7 @@ class Html{
     // different
     span(_class='', value=''){ return '<span class="'+_class+'">'+value+'</span>'; }
     icon(_class=''){ return '<i class="feather icon-'+_class+'"></i>'; }
-    div(_class='', value=''){ return '<div class="'+_class+'">' +value+ '</div>'; }
+    div(_class='', value='', id=''){ return '<div class="'+_class+'" id="'+id+'">' +value+ '</div>'; }
     p(_class='', value=''){ return '<p class="'+_class+'">' +value+ '</p>'; }
     section(_class='', value=''){ return '<section class="'+_class+'">' +value+ '</section>'; }
     image(_class='image', src='', modal='', id=''){ return '<img src="'+src+'" class="'+_class+'" '+(modal!=''?'data-bs-toggle="modal" data-bs-target="#imageModal" onClick="getImage('+"'"+src+"'"+','+"'"+id+"'"+')"':'')+'/>'; }

@@ -75,6 +75,7 @@ class Post_Controllers extends Controllers{
         return [
             {title: 'Avatar', class:'text-center', width: '5%'},
             {title: 'Tiêu Đề', class:'', width: ''},
+            {title: 'Danh Mục', class: 'text-center', width: '15%'},
             {title: 'Ngày Tạo', class: 'text-center', width: '15%'},
             {title: 'Hiển Thị', class: 'text-center', width: '10%'},
             {title: 'Chức Năng', class: 'text-center', width: '15%'}
@@ -87,8 +88,10 @@ class Post_Controllers extends Controllers{
         for (let index = 0; index < array.length; index++) {
             let td='';
             const element = array[index]
+            const category = await Category_Models.getDetail({_id: element['parentID']})
             td+=this.tdImage(element['avatar']!=''?'/uploads/'+this.params(2)+'/'+element['avatar']:'/assets/images/photrader.jpeg',element['_id'])
             td+=Html.td(element[this.title], ' align-middle')
+            td+=this.tdType(category[0][this.title])
             td+=this.tdDate(element['created'])
             td+=this.tdStatus(element['_id'], element['status'])
             td+=this.tdFunction(element['_id'], this.params(2), element[this.title])

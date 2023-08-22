@@ -72,7 +72,7 @@ class Share_Controllers extends Controllers{
             {title: 'Entry', class: 'text-center', width: ''},
             {title: 'SL', class: 'text-center', width: ''},
             {title: 'TP', class: 'text-center', width: ''},
-            {title: 'Link', class: 'text-center', width: ''},
+            // {title: 'Link', class: 'text-center', width: ''},
             {title: 'Kết Quả', class: 'text-center', width: ''},
             {title: 'Ngày Tạo', class: 'text-center', width: '15%'},
             {title: 'Hiển Thị', class: 'text-center', width: '10%'},
@@ -91,7 +91,7 @@ class Share_Controllers extends Controllers{
             td+=Html.td(element['entry'], 'align-middle text-center')
             td+=Html.td(element['sl'], 'align-middle text-center')
             td+=Html.td(element['tp'], 'align-middle text-center')
-            td+=Html.td(element['link'], 'align-middle text-center')
+            // td+=Html.td(element['link'], 'align-middle text-center')
             td+=this.tdType(element['result'])
             td+=this.tdDate(element['created'])
             td+=this.tdStatus(element['_id'], element['status'])

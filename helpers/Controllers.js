@@ -6,6 +6,16 @@ const moment = require('moment');
 const mongoose = require('mongoose');
 const Validation=require('./Validatation')
 const Convert=require('./Convert')
+
+const User_Models = require('../models/User_Models')
+const Post_Models = require('../models/Post_Models')
+const Menu_Models = require('../models/Menu_Models')
+const Share_Models = require('../models/Share_Models')
+const Course_Models = require('../models/Course_Models')
+const Library_Models = require('../models/Library_Models')
+const Contact_Models = require('../models/Contact_Models')
+const Network_Models = require('../models/Network_Models')
+
 class Controllers{
     
     constructor(req, res, model){
@@ -53,13 +63,10 @@ class Controllers{
     formContent(array){
         const saveHTML = Html.submit('btn btn-outline-primary has-ripple', 'Lưu')
         let module=this.module
-        if(
-            this.req.originalUrl.includes('site') ||
-            this.req.originalUrl.includes('mail')
-        ){
-            module='dashboard';
+        let exitHTML = '';
+        if(!this.req.originalUrl.includes('site')&&!this.req.originalUrl.includes('mail')){
+            exitHTML = Html.a('Thoát','/admin/'+module+'/index', 'btn btn-outline-secondary has-ripple')
         }
-        const exitHTML = Html.a('Thoát','/admin/'+module+'/index', 'btn btn-outline-secondary has-ripple')
         return Html.div('card-body', Html.div('card-body', Html.form(Html.div('row', array) + Html.div('save', Html.div('mt-3', saveHTML + '&nbsp;' + exitHTML) ) + Html.div('loading', '<br/>' + Html.spiner()))))
     }
 
@@ -81,7 +88,7 @@ class Controllers{
         const array=[
             {title: Html.icon('home'), link: 'dashboard'},
             {title: Convert.index(this.module), link: this.module},
-            {title: (this.params(3)=='index'?'Bảng Dữ Liệu': 'Form'), link: ''}
+            {title: (this.req.originalUrl.includes('index')?'Bảng Dữ Liệu': 'Form'), link: ''}
         ]
         let str='';
         for (let index = 0; index < array.length; index++) {
@@ -90,8 +97,75 @@ class Controllers{
         return this.breadcrumbHTML(str)
     }
 
+    async arrayAside(){
+        const user = await User_Models.getFull({},'_id')
+        const post = await Post_Models.getFull({},'_id')
+        const menu = await Menu_Models.getFull({},'_id')
+        const share = await Share_Models.getFull({},'_id')
+        const course = await Course_Models.getFull({},'_id')
+        const library = await Library_Models.getFull({},'_id')
+        const contact = await Contact_Models.getFull({},'_id')
+        const network = await Network_Models.getFull({},'_id')
+        return [
+            { title: "Danh Mục", link: "category", color: "yellow", count: user.length},
+            { title: "Bài Viết", link: "post", color: "yellow", count: post.length },
+            { title: "Menu", link: "menu", color: "yellow", count: menu.length },
+            { title: "Chia Sẻ Kèo", link: "share", color: "green", count: share.length },
+            { title: "Khóa Học", link: "course", color: "green", count: course.length },
+            { title: "Thư Viện Ảnh", link: "library", color: "green", count: library.length },
+            { title: "Liên Hệ", link: "contact", color: "blue", count: contact.length },
+            { title: "Mạng Xã Hội", link: "network", color: "blue", count: network.length }
+        ]
+    }
+
+    async arrayDashboard(){
+        let array = await this.arrayAside()
+        let str='';
+        for (let index = 0; index < array.length; index++) {
+            const element = array[index];
+            str+=Html.div('col-sm-4', 
+                Html.div('card',
+                    Html.div('card-body',
+                        Html.div('row align-items-center',
+                            Html.div('col-8',
+                                Html.h4(element['count'], 'text-c-'+element['color'])
+                                +
+                                Html.h6('Tổng Dữ Liệu', 'text-muted m-b-0')
+                            )
+                            +
+                            Html.div('col-4 text-end',
+                                Html.icon('feather icon-bar-chart-2 f-28')
+                            )
+                        )
+                    )
+                    +
+                    Html.div('card-footer bg-c-'+element['color'],
+                        Html.div('row align-items-center',
+                            Html.div('col-9',
+                                Html.p('text-white m-b-0', element['title'])
+                            )
+                            +
+                            Html.div('col-3 text-end',
+                                Html.icon('feather icon-trending-up text-white f-16')
+                            )
+                        )
+                    )
+                )
+            )
+        }
+        return str;
+    }
+
+    async dashboard(){
+        return Html.div('row', await this.arrayDashboard());
+    }
+
     async main(array=[]){
-        return Html.section('pcoded-main-container', Html.div('pcoded-content', this.breadcrumb() + await this.content(array)));
+        let content = await this.content(array)
+        if(this.req.originalUrl.includes('dashboard')){
+            content = await this.dashboard(array)
+        }
+        return Html.section('pcoded-main-container', Html.div('pcoded-content', this.breadcrumb() + content ));
     }
 
     aside(){

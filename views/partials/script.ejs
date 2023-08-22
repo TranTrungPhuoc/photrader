@@ -3,6 +3,10 @@
 <script src="/assets/js/ripple.js"></script>
 <script src="/assets/js/pcoded.min.js"></script>
 <script>
+    function copy(id) {
+        const img = $('.id_'+id+' img').attr('src')
+        navigator.clipboard.writeText(img);
+    }
     function loadLibrary() {
         $.ajax({
             url: '/admin/library/load',
@@ -13,9 +17,12 @@
                 const array = results['data'];
                 let str='<div class="row">';
                 for (let index = 0; index < array.length; index++) {
-                    str+='<div class="col-1">';
-                        str+='<div class="image">';
+                    str+='<div class="col-1 mb-3">';
+                        str+='<div class="image id_'+array[index]['_id']+'">';
                             str+='<img src="/uploads/library/'+array[index]['avatar']+'" class="img-thumbnail">';
+                        str+='</div>';
+                        str+='<div class="copy">';
+                            str+='<button class="btn btn-outline-success has-ripple form-control" onclick="copy('+"'"+array[index]['_id']+"'"+')"><i class="feather icon-copy"></i></button>';
                         str+='</div>';
                     str+='</div>';
                 }
@@ -77,6 +84,7 @@
                             alert('Thêm thành công !!!')
                             window.location.href = '/admin/<%-module%>/index'
                         }else if(window.location.pathname.includes('edit')){
+                            $('.save .alert').remove()
                             $('.save').append('<div class="alert alert-success mt-3" role="alert">Đã Cập Nhật</div>')
                         }
                     }else{
@@ -129,9 +137,12 @@
                     const array = results['data'];
                     let str='<div class="row">';
                     for (let index = 0; index < array.length; index++) {
-                        str+='<div class="col-1">';
-                            str+='<div class="image">';
+                        str+='<div class="col-1 mb-3">';
+                            str+='<div class="image id_'+array[index]['_id']+'">';
                                 str+='<img src="/uploads/library/'+array[index]['avatar']+'" class="img-thumbnail">';
+                            str+='</div>';
+                            str+='<div class="copy">';
+                                str+='<button class="btn btn-outline-success has-ripple form-control" onclick="copy('+"'"+array[index]['_id']+"'"+')"><i class="feather icon-copy"></i></button>';
                             str+='</div>';
                         str+='</div>';
                     }
