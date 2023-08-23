@@ -11,6 +11,7 @@ class Network_Controllers extends Controllers{
         super(req, res)
         this.model = Network_Models
         this.title = 'title'
+        this.sort = 'location'
     }
 
     async checkForm(id){
@@ -71,7 +72,7 @@ class Network_Controllers extends Controllers{
     }
 
     async tbodyList(){
-        const array = await this.dataCommon(this.title, {'sort': 1})
+        const array = await this.dataCommon(this.title, {'location': 1, 'sort': 1})
         let tr='';
         for (let index = 0; index < array.length; index++) {
             let td='';

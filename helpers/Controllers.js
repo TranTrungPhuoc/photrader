@@ -219,7 +219,7 @@ class Controllers{
     async sortNumber(){
         const data = await this.model.getDetail(
             this.sort!=undefined?{[this.sort]: this.getValue(this.sort)}:{}, 
-            this.sort!=undefined?{[this.sort]:-1}:{'created':-1}
+            this.sort!=undefined?{'sort':-1}:{'created':-1}
         )
         return data.length>0?parseInt(data[0]['sort'])+1:1;
     }
