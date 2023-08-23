@@ -7,4 +7,5 @@ router.get('/edit/:id', (req, res) => new Controllers(req, res).form())
 router.post('/process', (req, res) => new Controllers(req, res).process())
 router.post('/delete', (req, res) => new Controllers(req, res).delete())
 router.post('/status', (req, res) => new Controllers(req, res).status())
+router.post('/sort', (req, res) => new Controllers(req, res).arrange())
 module.exports=router

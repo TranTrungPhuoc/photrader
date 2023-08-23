@@ -19,13 +19,13 @@ class Html{
     form(value='', id='formData'){ return '<form id="'+id+'">'+value+'</form>'; }
     input(type='text', _class='', id='', value='', placeholder='', require=false, disabled=false, event=''){ return '<input type="'+type+'" class="'+_class+'" id="'+id+'" name="'+id+'" value="'+value+'" placeholder="'+placeholder+'"'+(require==true?' required':'')+(disabled==true?' disabled':'')+' '+event+' />';}
     option(value='', name='', selected=''){ return '<option value="'+value+'" '+selected+'>' + name + '</option>'; }
-    select(array=[], _class='', id='', value=''){
+    select(array=[], _class='', id='', value='', event=''){
         let str='<option value="">__Chọn__</option>'; 
         for (let index = 0; index < array.length; index++) { 
             const selected = (array[index]['value']==value.toString()) ? 'selected':''
             str+=this.option(array[index]['value'], array[index]['name'], selected)
         } 
-        return '<select class="'+_class+'" id="'+id+'" name="'+id+'">' + str + '</select>'; 
+        return '<select class="'+_class+'" id="'+id+'" name="'+id+'" '+event+'>' + str + '</select>'; 
     }
     textarea(rows=3, value='', _class='', id='', placeholder=''){ return '<textarea rows="'+rows+'" class="'+_class+'" id="'+id+'" name="'+id+'" placeholder="'+placeholder+'">' + value + '</textarea>'; }
     submit(_class='', value=''){ return '<button type="submit" class="'+_class+'">'+value+'</button>'; }

@@ -18,10 +18,9 @@ const Network_Models = require('../models/Network_Models')
 
 class Controllers{
     
-    constructor(req, res, model){
+    constructor(req, res){
         this.req=req
         this.res=res
-        this.model=model
         this.module=this.params(2)
     }
 
@@ -62,10 +61,9 @@ class Controllers{
 
     formContent(array){
         const saveHTML = Html.submit('btn btn-outline-primary has-ripple', 'Lưu')
-        let module=this.module
         let exitHTML = '';
         if(!this.req.originalUrl.includes('site')&&!this.req.originalUrl.includes('mail')){
-            exitHTML = Html.a('Thoát','/admin/'+module+'/index', 'btn btn-outline-secondary has-ripple')
+            exitHTML = Html.a('Thoát','/admin/'+this.module+'/index', 'btn btn-outline-secondary has-ripple')
         }
         return Html.div('card-body', Html.div('card-body', Html.form(Html.div('row', array) + Html.div('save', Html.div('mt-3', saveHTML + '&nbsp;' + exitHTML) ) + Html.div('loading', '<br/>' + Html.spiner()))))
     }
@@ -210,6 +208,22 @@ class Controllers{
         return this.req.body[field]
     }
 
+    async arrange(){
+        await this.model.update(
+            {_id: new mongoose.Types.ObjectId(this.getValue('id'))},
+            {sort: parseInt(this.getValue('sort'))}
+        );
+        this.res.send('ok')
+    }
+
+    async sortNumber(){
+        const data = await this.model.getDetail(
+            this.sort!=undefined?{[this.sort]: this.getValue(this.sort)}:{}, 
+            this.sort!=undefined?{[this.sort]:-1}:{'created':-1}
+        )
+        return data.length>0?parseInt(data[0]['sort'])+1:1;
+    }
+
     async process(){
         const id=this.req.query['id']
         let error=[];
@@ -218,7 +232,8 @@ class Controllers{
             if(this.getValue['password']!=undefined){ this.req.body['password'] = bcrypt.hashSync(this.getValue['password'], salt); }
             if(this.req.body['parentID']==''){ delete this.req.body['parentID']; }
             if(id == 'undefined'){
-                this.req.body['userID'] = this.req.cookies.user[0]['_id']
+                this.req.body['sort'] = await this.sortNumber();
+                this.req.body['userID'] = this.req.cookies.user[0]['_id'];
                 await this.model.create(this.req.body)
             }else{
                 this.req.body['updated'] = new Date()
@@ -274,11 +289,11 @@ class Controllers{
         return this.res.send({code: 200})
     }
 
-    async dataCommon(key=''){
+    async dataCommon(key='', sort={}){
         const limit = this.getNumber(this.req.query.limit, process.env.LIMIT)
         const page = this.getNumber(this.req.query.page, 0)
         const skip = (page==1 || page==0) ? 0 : (page-1)*limit
-        return await this.model.getList(this.search(key), '', limit, skip)
+        return await this.model.getList(this.search(key), '', limit, skip, sort)
     }
 
     async dataFull(key=''){ 
@@ -299,30 +314,47 @@ class Controllers{
         return value?!isNaN(value) ? parseInt(value): _default: _default 
     }
 
-    convertDate(value){ 
-        const date = moment(value); return date.format('DD')+'/'+date.format('MM')+'/'+date.format('YYYY') 
+    convertDate(value){
+        const date = moment(value);
+        return date.format('DD')+'/'+date.format('MM')+'/'+date.format('YYYY')+'<br/>'+date.format('HH')+':'+date.format('m')+':'+date.format('s')
     }
+    
+    tdSort(array, _class, _id, _value, _event){
+        return Html.td(Html.select(array, _class, _id, _value, _event), 'align-middle text-center')
+    }
+
+    tdUser(value){
+        return Html.td(Html.span('badge bg-info', value), 'align-middle text-center')
+    }
+
     tdType(value){
         return Html.td(Html.span('badge bg-success', value), 'align-middle text-center')
     }
+
     tdImage(image, id){
         return Html.td(Html.image('image wid-50', image, 'modal', id), 'text-center')
     }
+
     tdDate(date){
         return Html.td(this.convertDate(date), 'text-center align-middle')
     }
+
     tdStatus(id, status){
         return Html.td(Html.switch(id, (status==true?'checked':'')), 'text-center')
     }
+
     tdEdit(id, module){
         return Html.a(Html.icon('edit'),'/admin/'+module+'/edit/'+id,'btn btn-sm btn-outline-info has-ripple')
     }
+
     tdDelete(id, value){
         return Html.button(Html.icon('trash'),'btn btn-sm btn-outline-danger has-ripple', ' data-bs-toggle="modal" data-bs-target="#deleteModal"', "popupDelete('"+id+"', '"+value+"')")
     }
+
     tdFunction(id, module, value){
         return Html.td(this.tdEdit(id, module) + '&nbsp;' + this.tdDelete(id, value), 'text-center align-middle')
     }
+
     async upload(){
         const id = this.req.body.id;
         const avatar = this.res.locals.file['value']
@@ -334,16 +366,19 @@ class Controllers{
         }
         this.res.send({kq:1, path: this.res.locals.file['path'] + avatar })
     }
+
     async load(){
         const Library_Models = require('../models/Library_Models')
         this.res.send({data: await Library_Models.getFull()})
     }
+
     async loadLibrary(){
         const avatar = this.res.locals.file['value']
         const Library_Models = require('../models/Library_Models')
         await this.model.create({avatar, userID: this.req.cookies.user[0]['_id']})
         this.res.send({data: await Library_Models.getFull()})
     }
+
     async login(){
         const User_Models = require('../models/User_Models')
         const checkEmail = await User_Models.getDetail({email: this.getValue('email'), status: true})
