@@ -318,7 +318,7 @@ class Controllers{
     }
 
     async status(){
-        await this.model.update(this.objectId(this.req.body.id), {status: this.req.body.status, updated: new Date()})
+        await this.model.update(this.objectId(this.req.body.id), {[this.req.body.key]: this.req.body.status, updated: new Date()})
         return this.res.send({code: 200})
     }
 
@@ -372,8 +372,12 @@ class Controllers{
         return Html.td(this.convertDate(date), 'text-center align-middle')
     }
 
+    tdFloat(id, float){
+        return Html.td(Html.float(id, (float==true?'checked':'')), 'text-center')
+    }
+
     tdStatus(id, status){
-        return Html.td(Html.switch(id, (status==true?'checked':'')), 'text-center')
+        return Html.td(Html.status(id, (status==true?'checked':'')), 'text-center')
     }
 
     tdEdit(id, module){

@@ -49,12 +49,12 @@
         $('.showImage img').attr('src', src);
         $('#imageId').val(id)
     }
-    function status(id) {
-        const status = $('#switch-'+id).prop('checked')
+    function status(id, key) {
+        const status = $('#'+key+'-'+id).prop('checked')
         $.ajax({
             url: '/admin/<%-module%>/status',
             type: 'POST',
-            data: {id, status},
+            data: {id, status, key},
             success: function(results){} 
         })
     }

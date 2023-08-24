@@ -48,6 +48,7 @@ class Html{
     section(_class='', value=''){ return '<section class="'+_class+'">' +value+ '</section>'; }
     image(_class='image', src='', modal='', id=''){ return '<img src="'+src+'" class="'+_class+'" '+(modal!=''?'data-bs-toggle="modal" data-bs-target="#imageModal" onClick="getImage('+"'"+src+"'"+','+"'"+id+"'"+')"':'')+'/>'; }
     spiner(_color=''){ return '<div class="spinner-border '+_color+'" role="status"> <span class="sr-only">Loading...</span> </div>'; }
-    switch(id, checked=''){ return this.div('switch d-inline', '<input type="checkbox" '+checked+' class="switcher-input" name="validation-switcher" id="switch-'+id+'" onChange="status('+"'"+id+"'"+')"><label for="switch-'+id+'" class="cr"></label>') }
+    status(id, checked=''){ return this.div('switch d-inline', '<input type="checkbox" '+checked+' class="switcher-input" name="validation-status" id="status-'+id+'" onChange="status('+"'"+id+"'"+','+"'status'"+')"><label for="status-'+id+'" class="cr"></label>') }
+    float(id, checked=''){ return this.div('switch d-inline', '<input type="checkbox" '+checked+' class="switcher-input" name="validation-float" id="float-'+id+'" onChange="status('+"'"+id+"'"+','+"'float'"+')"><label for="float-'+id+'" class="cr"></label>') }
 }
 module.exports = new Html
