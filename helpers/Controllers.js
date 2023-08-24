@@ -16,6 +16,8 @@ const Library_Models = require('../models/Library_Models')
 const Contact_Models = require('../models/Contact_Models')
 const Network_Models = require('../models/Network_Models')
 
+const axios = require('axios');
+
 class Controllers{
     
     constructor(req, res){
@@ -173,6 +175,37 @@ class Controllers{
             str += Html.li(Html.a(Html.span('pcoded-micon',Html.icon(array[index].icon)) + array[index].title,'/admin/' + array[index].link + '/' + array[index].home,'nav-link has-ripple'), (this.params(2)==array[index].link?'nav-item active': 'nav-item'));
         }
         return Html.ul(str)
+    }
+
+    async getAPI() {
+        try {
+            const response = await axios.get('https://api.triqhuynh.com/photrader/category/layout/detail/64b6e783189bcf8a9ae030ac');
+            return response;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async getPostApi(){
+        const api = await this.getAPI()
+        const _array = api['data']['response'][0]['Posts']
+        const newArray = []
+        for (let index = 0; index < _array.length; index++) {
+            const element = _array[index];
+            newArray.push({
+                title: element['title'],
+                slug: element['slug'],
+                parentID: new mongoose.Types.ObjectId('64e4f9888a815b75f74432f4'),
+                userID: new mongoose.Types.ObjectId('64de4ec67d334044461d019a'),
+                description: element['description'],
+                content: element['content'],
+                float: element['float'],
+                view: element['view'],
+                video: element['video'],
+                avatar: element['avatar']
+            })
+        }
+        return await Post_Models.create(newArray)
     }
 
     async index(array=[]){ await this.res.render('index', { aside: this.aside(), module: this.module, main: await this.main(array), user: this.req.cookies.user[0] }) }

@@ -84,6 +84,19 @@ class Post_Controllers extends Controllers{
         ]
     }
 
+    splitString(string, so){
+        const array = string.split(' ');
+        let newString = '';
+        for (let index = 0; index < array.length; index++) {
+            if(index <= so){
+                const element = array[index];
+                newString += element + ' ';
+            }
+        }
+        newString =  newString.trim() + '...';
+        return newString;
+    }
+
     async tbodyList(){
         const array = await this.dataCommon(this.title, {'created': -1})
         let tr='';
@@ -93,7 +106,7 @@ class Post_Controllers extends Controllers{
             const user = await User_Models.getDetail({_id:element['userID']})
             const category = await Category_Models.getDetail({_id: element['parentID']})
             td+=this.tdImage(element['avatar']!=''?'/uploads/'+this.params(2)+'/'+element['avatar']:'/assets/images/photrader.jpeg',element['_id'])
-            td+=Html.td(element[this.title], ' align-middle')
+            td+=Html.td(this.splitString(element[this.title], 5), ' align-middle')
             td+=this.tdType(category[0][this.title])
             td+=this.tdDate(element['created'])
             td+=this.tdUser(user[0]['email'])
