@@ -74,6 +74,40 @@ class Post_Api extends Api{
             response: data
         })
     }
+    async view(){
+        const ObjectId = require('mongoose').Types.ObjectId;
+
+        if(ObjectId.isValid(this.req.params.id) == false){
+            this.res.send({
+                code: 600,
+                message: "Error",
+                response: {
+                    error: "Id không đúng."
+                }
+            })
+            return
+        }
+
+        const check_exist_db = await Post_Models.check(this.req.params.id);
+        if(check_exist_db.length == 0){
+            this.res.send({
+                code: 602,
+                message: "Error",
+                response: {
+                    error: "Dữ liệu không tồn tại."
+                }
+            })
+            return
+        }
+
+        const data = await Post_Models.view(this.req.params.id, check_exist_db[0].view + 1)
+        
+        this.res.send({
+            code: 200,
+            message: "Success",
+            response: data
+        })
+    }
 }
 
 module.exports = Post_Api

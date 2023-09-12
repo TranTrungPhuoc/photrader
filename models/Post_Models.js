@@ -1,6 +1,7 @@
 const Models = require('../helpers/Models')
 const Schema = require('../schemas/Post_Schema')
 const Category_Model = require('../schemas/Category_Schema')
+const mongoose = require('mongoose');
 class Post_Models extends Models{
     constructor(table){
         super(table)
@@ -110,6 +111,18 @@ class Post_Models extends Models{
                 }
             }
         ]).exec()
+    }
+    async check(id){
+        return await this.table.find({_id: new mongoose.Types.ObjectId(id)}).exec()
+    }
+    async view(id, view){
+        await this.table.updateMany(
+            { _id: new mongoose.Types.ObjectId(id) },
+            { view, updated: new Date() }
+        )
+        return await this.table.find({
+            _id: new mongoose.Types.ObjectId(id)
+        }).exec()
     }
 }
 module.exports = new Post_Models
