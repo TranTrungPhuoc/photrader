@@ -23,6 +23,7 @@ class Library_Api extends Api{
             return;
         }
         const data = await Library_Models.getDetail(type);
+        data[0]['avatar'] = this.req.protocol + '://' + this.req.headers.host + '/uploads/library/' + data[0]['avatar'];
         return this.res.send({
             code: 200,
             message: "Success",

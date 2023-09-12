@@ -8,6 +8,13 @@ class Category_Api extends Api{
     async getItemsNews(){
         const { type, limit } = this.req.query
         const data = await Category_Models.getItemsNews(type, parseInt(limit));
+        for (let index = 0; index < data.length; index++) {
+            const element = data[index];
+            for (let j = 0; j < element['Posts'].length; j++) {
+                const element2 = element['Posts'][j];
+                element2['avatar'] = element2['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/post/' + element2['avatar']:'';
+            }
+        }
         return this.res.send({
             code: 200,
             message: "Success",
@@ -18,6 +25,13 @@ class Category_Api extends Api{
     async getItemsHome(){
         const { type, limit } = this.req.query
         const data = await Category_Models.getItemsHome(type, parseInt(limit));
+        for (let index = 0; index < data.length; index++) {
+            const element = data[index];
+            for (let j = 0; j < element['Posts'].length; j++) {
+                const element2 = element['Posts'][j];
+                element2['avatar'] = element2['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/post/' + element2['avatar']:'';
+            }
+        }
         return this.res.send({
             code: 200,
             message: "Success",
@@ -28,6 +42,13 @@ class Category_Api extends Api{
     async getItemsDetail(){
         const { slug } = this.req.params
         const data = await Category_Models.getItemsDetail(slug);
+        for (let index = 0; index < data.length; index++) {
+            const element = data[index];
+            for (let j = 0; j < element['Posts'].length; j++) {
+                const element2 = element['Posts'][j];
+                element2['avatar'] = element2['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/post/' + element2['avatar']:'';
+            }
+        }
         return this.res.send({
             code: 200,
             message: "Success",
@@ -38,6 +59,13 @@ class Category_Api extends Api{
     async getViewMore(){
         const { slug } = this.req.params
         const data = await Category_Models.getItemsDetail(slug);
+        for (let index = 0; index < data.length; index++) {
+            const element = data[index];
+            for (let j = 0; j < element['Posts'].length; j++) {
+                const element2 = element['Posts'][j];
+                element2['avatar'] = element2['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/post/' + element2['avatar']:'';
+            }
+        }
         return this.res.send({
             code: 200,
             message: "Success",
@@ -48,6 +76,13 @@ class Category_Api extends Api{
     async getItemsHomeDetail(){
         const { slug } = this.req.params
         const data = await Category_Models.getItemsDetail(slug);
+        for (let index = 0; index < data.length; index++) {
+            const element = data[index];
+            for (let j = 0; j < element['Posts'].length; j++) {
+                const element2 = element['Posts'][j];
+                element2['avatar'] = element2['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/post/' + element2['avatar']:'';
+            }
+        }
         return this.res.send({
             code: 200,
             message: "Success",

@@ -17,6 +17,15 @@ class Post_Api extends Api{
             return
         }
         const data = await Post_Models.getRelative(slug.trim())
+
+        for (let index = 0; index < data.length; index++) {
+            const element = data[index];
+            for (let j = 0; j < element['Posts'].length; j++) {
+                const element2 = element['Posts'][j];
+                element2['avatar'] = element2['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/post/' + element2['avatar']:'';
+            }
+        }
+
         this.res.send({
             code: 200,
             message: "Success",
@@ -26,6 +35,12 @@ class Post_Api extends Api{
     async viewMore(){
         let { limit } = this.req.query
         const data = await Post_Models.viewMore(limit!=undefined?parseInt(limit):10)
+        
+        for (let index = 0; index < data.length; index++) {
+            const element = data[index];
+            element['avatar'] = element['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/post/' + element['avatar']:'';
+        }
+        
         this.res.send({
             code: 200,
             message: "Success",
@@ -34,6 +49,11 @@ class Post_Api extends Api{
     }
     async feature(){
         const data = await Post_Models.feature()
+
+        for (let index = 0; index < data.length; index++) {
+            const element = data[index];
+            element['avatar'] = element['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/post/' + element['avatar']:'';
+        }
 
         const one = []
         const two = []
@@ -68,6 +88,9 @@ class Post_Api extends Api{
             return
         }
         const data = await Post_Models.getDetailSlug(slug.trim())
+
+        data[0]['avatar'] = data[0]['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/post/' + data[0]['avatar']:'';
+
         this.res.send({
             code: 200,
             message: "Success",
@@ -102,6 +125,8 @@ class Post_Api extends Api{
 
         const data = await Post_Models.view(this.req.params.id, check_exist_db[0].view + 1)
         
+        data[0]['avatar'] = data[0]['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/post/' + data[0]['avatar']:'';
+
         this.res.send({
             code: 200,
             message: "Success",
