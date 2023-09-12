@@ -99,6 +99,7 @@ class Post_Controllers extends Controllers{
     }
 
     async tbodyList(){
+        const link = 'https://photrader.com/';
         const array = await this.dataCommon(this.title, {'created': -1})
         let tr='';
         for (let index = 0; index < array.length; index++) {
@@ -107,7 +108,7 @@ class Post_Controllers extends Controllers{
             const user = await User_Models.getDetail({_id:element['userID']})
             const category = await Category_Models.getDetail({_id: element['parentID']})
             td+=this.tdImage(element['avatar']!=''?'/uploads/'+this.params(2)+'/'+element['avatar']:'/assets/images/photrader.jpeg',element['_id'])
-            td+=Html.td(this.splitString(element[this.title], 3), ' align-middle')
+            td+=Html.td(Html.a(this.splitString(element[this.title], 3), link + element['slug'] + '.html', 'nav-link', '_blank'), ' align-middle')
             td+=this.tdType(category[0][this.title])
             td+=this.tdDate(element['created'])
             td+=this.tdUser(user[0]['email'])

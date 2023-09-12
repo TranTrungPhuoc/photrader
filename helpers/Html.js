@@ -34,7 +34,7 @@ class Html{
     ckeditor(rows=3, value='', _class='', id='', placeholder=''){ return '<textarea rows="'+rows+'" class="'+_class+'" id="'+id+'" placeholder="'+placeholder+'">' + value + '</textarea>'; }
 
     // link
-    a(value='', link='', _class='nav-link'){ return '<a href="'+link+'" class="'+_class+'">' + value + '</a>';}
+    a(value='', link='', _class='nav-link', target=''){ return '<a href="'+link+'" class="'+_class+'" target="'+target+'">' + value + '</a>';}
 
     // list
     li(value='', _class='nav-item'){ return '<li class="'+_class+'">' + value + '</li>'; }

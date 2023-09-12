@@ -58,7 +58,7 @@ class Controllers{
     }
 
     async bodyContent(){
-        return Html.div('card-body table-border-style', Html.div('table-responsive', Html.table(await this.theadCommon(),await this.tbodyList())) + await this.pagination() )
+        return Html.div('card-body table-border-style', Html.div('table-responsive', Html.table(this.theadCommon(),await this.tbodyList())) + await this.pagination() )
     }
 
     formContent(array){
@@ -326,7 +326,7 @@ class Controllers{
         const limit = this.getNumber(this.req.query.limit, process.env.LIMIT)
         const page = this.getNumber(this.req.query.page, 0)
         const skip = (page==1 || page==0) ? 0 : (page-1)*limit
-        return await this.model.getList(this.search(key), '', limit, skip, sort)
+        return await this.model.getList(this.search(key), '', parseInt(limit), skip, sort)
     }
 
     async dataFull(key=''){ 

@@ -82,13 +82,14 @@ class Category_Controllers extends Controllers{
     }
 
     async tbodyList(){
+        const link = 'https://photrader.com/';
         const array = await this.dataCommon(this.title, {'created': -1})
         let tr='';
         for (let index = 0; index < array.length; index++) {
             const element = array[index]
             const user = await User_Models.getDetail({_id:element['userID']})
             let td='';
-            td+=Html.td(element[this.title], ' align-middle')
+            td+=Html.td(Html.a(element[this.title], link + element['slug'], 'nav-link', '_blank'), ' align-middle')
             td+=this.tdType(element['type'])
             td+=this.tdDate(element['created'])
             td+=this.tdUser(user[0]['email'])

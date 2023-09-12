@@ -30,7 +30,7 @@ class Menu_Api extends Api{
             })
             return;
         }
-        const response = await Menu_Models.getList(location);
+        const response = await Menu_Models.getListLayout(location);
         return this.res.send({
             code: 200,
             message: "Success",
