@@ -17,8 +17,9 @@
         return false;
     }
     function copy(id) {
+        const currentURL = window.location.href.split('/');
         const img = $('.id_'+id+' img').attr('src')
-        navigator.clipboard.writeText(img);
+        navigator.clipboard.writeText(currentURL[0]+'/'+currentURL[1]+'/'+currentURL[2] + img);
     }
     function loadLibrary() {
         $.ajax({
