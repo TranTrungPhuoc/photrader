@@ -17,7 +17,7 @@ class Post_Api extends Api{
             return
         }
         const data = await Post_Models.getRelative(slug.trim())
-        this.res.res.send({
+        this.res.send({
             code: 200,
             message: "Success",
             response: data

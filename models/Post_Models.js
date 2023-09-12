@@ -8,31 +8,35 @@ class Post_Models extends Models{
     }
     async getRelative(slug){
         const post = await this.table.find({slug}).exec();
-        return await Category_Model.aggregate([
-            {$match: {_id: post[0].parentID} },
-            {$sort: {created: -1}},
-            {
-                $lookup: {
-                    from: 'posts',
-                    localField: '_id',
-                    foreignField: 'parentID',
-                    pipeline: [
-                        {$match: {slug: {$ne: slug}}},
-                        {$sort: {created: -1}},
-                        {$limit: 7},
-                        {$project: { title: true, slug: true, avatar: true, description: true }}
-                    ],
-                    as: 'Posts'
+        if(post.length > 0){
+            return await Category_Model.aggregate([
+                {$match: {_id: post[0].parentID} },
+                {$sort: {created: -1}},
+                {
+                    $lookup: {
+                        from: 'posts',
+                        localField: '_id',
+                        foreignField: 'parentID',
+                        pipeline: [
+                            {$match: {slug: {$ne: slug}}},
+                            {$sort: {created: -1}},
+                            {$limit: 7},
+                            {$project: { title: true, slug: true, avatar: true, description: true }}
+                        ],
+                        as: 'Posts'
+                    }
+                },
+                {
+                    $project:{
+                        title: true,
+                        slug: true,
+                        Posts: true
+                    }
                 }
-            },
-            {
-                $project:{
-                    title: true,
-                    slug: true,
-                    Posts: true
-                }
-            }
-        ]).exec()
+            ]).exec()
+        }else{
+            return []
+        }
     }
     async viewMore(limit){
         return await this.table.aggregate([
