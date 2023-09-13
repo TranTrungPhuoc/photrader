@@ -224,7 +224,7 @@ class Controllers{
             }
             else if(array[index]['type']=='ckeditor'){
                 const uploadFile = Html.button('UploadFile','btn-outline-success has-ripple', 'data-bs-toggle="modal" data-bs-target="#libraryModal"', 'loadLibrary()')
-                const linkWeb = process.env.URI;
+                // const linkWeb = process.env.URI;
                 typeHtml=Html.ckeditor(array[index]['row'], array[index]['value'], array[index]['class'], array[index]['id'], array[index]['placeholder']) + Html.p('mt-3', uploadFile)
             }
             str+=Html.div('col-md-'+array[index]['col']+((array[index]['type']=='hidden')?' d-none':''), 

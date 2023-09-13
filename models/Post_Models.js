@@ -98,7 +98,7 @@ class Post_Models extends Models{
                     localField: 'userID',
                     foreignField: '_id',
                     pipeline: [
-                        {$project: { email: true }}
+                        {$project: { email: true, avatar: true, description: true }}
                     ],
                     as: 'user'
                 }

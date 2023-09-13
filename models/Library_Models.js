@@ -5,7 +5,7 @@ class Library_Models extends Models{
         super(table)
         this.table = Schema
     }
-    async getDetail(type){
+    async getDetailApi(type){
         return await this.table.find({type}).exec();
     }
 }
