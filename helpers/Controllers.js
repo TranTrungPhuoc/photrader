@@ -223,7 +223,9 @@ class Controllers{
                 typeHtml=Html.select(array[index]['array'], array[index]['class'], array[index]['id'], (id!=undefined)?data[0][array[index]['id']]:'')
             }
             else if(array[index]['type']=='ckeditor'){
-                typeHtml=Html.ckeditor(array[index]['row'], array[index]['value'], array[index]['class'], array[index]['id'], array[index]['placeholder']) + Html.p('mt-3', Html.button('UploadFile','btn-outline-success has-ripple', 'data-bs-toggle="modal" data-bs-target="#libraryModal"', 'loadLibrary()'))
+                const uploadFile = Html.button('UploadFile','btn-outline-success has-ripple', 'data-bs-toggle="modal" data-bs-target="#libraryModal"', 'loadLibrary()')
+                const linkWeb = process.env.URI;
+                typeHtml=Html.ckeditor(array[index]['row'], array[index]['value'], array[index]['class'], array[index]['id'], array[index]['placeholder']) + Html.p('mt-3', uploadFile)
             }
             str+=Html.div('col-md-'+array[index]['col']+((array[index]['type']=='hidden')?' d-none':''), 
             Html.div('form-group fill', Html.label(array[index]['title'],'form-label') + typeHtml + Html.span('error error_'+array[index]['id'])))
