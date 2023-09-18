@@ -108,7 +108,7 @@ class Post_Controllers extends Controllers{
             const category = await Category_Models.getDetail({_id: element['parentID']})
             td+=this.tdImage(element['avatar']!=''?'/uploads/'+this.params(2)+'/'+element['avatar']:'/assets/images/photrader.jpeg',element['_id'])
             td+=Html.td(Html.a(this.splitString(element[this.title], 3), 'https://photrader.com/' + element['slug'] + '.html', 'nav-link', '_blank'), ' align-middle')
-            td+=this.tdType(category[0][this.title])
+            td+=this.tdType(category[0]!=undefined?category[0][this.title]:'')
             td+=this.tdDate(element['created'])
             td+=this.tdUser(user[0]['email'])
             td+=this.tdFloat(element['_id'], element['float'])
