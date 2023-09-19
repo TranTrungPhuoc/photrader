@@ -56,5 +56,6 @@ router.get('/viewMore', (req, res) => new Api(req, res).viewMore())
 router.get('/feature', (req, res) => new Api(req, res).feature())
 router.get('/getDetailSlug/:slug', (req, res) => new Api(req, res).getDetailSlug())
 router.get('/view/:id', (req, res) => new Api(req, res).view())
+router.get('/search', (req, res) => new Api(req, res).search())
 
 module.exports=router

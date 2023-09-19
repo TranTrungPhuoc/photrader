@@ -145,6 +145,19 @@ class Post_Api extends Api{
             response: data
         })
     }
+    async search(){
+        const {key, page, limit} = this.req.query
+        const data = await Post_Models.search(key, parseInt(page?(page==1?0:page):0), parseInt(limit??10))
+        for (let index = 0; index < data.length; index++) {
+            const element = data[index];
+            element['avatar'] = element['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/post/' + element['avatar']:'';
+        }
+        this.res.send({
+            code: 200,
+            message: "Success",
+            response: data
+        })
+    }
 }
 
 module.exports = Post_Api

@@ -124,5 +124,43 @@ class Post_Models extends Models{
             _id: new mongoose.Types.ObjectId(id)
         }).exec()
     }
+    async search(key, page, limit){
+        return await this.table.aggregate([
+            {$match: {title: { '$regex': key, '$options': 'i' }} },
+            { $sort: {created: -1} },
+            { $skip: page },
+            { $limit: limit },
+            {
+                $lookup: {
+                    from: 'categories',
+                    localField: 'parentID',
+                    foreignField: '_id',
+                    pipeline: [
+                        {$project: { title: true, slug: true }}
+                    ],
+                    as: 'category'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'userID',
+                    foreignField: '_id',
+                    pipeline: [
+                        {$project: { email: true, avatar: true, description: true }}
+                    ],
+                    as: 'user'
+                }
+            },
+            {
+                $project:{
+                    content: false,
+                    parentID: false,
+                    userID: false,
+                    __v: false
+                }
+            }
+        ]).exec()
+    }
 }
 module.exports = new Post_Models
