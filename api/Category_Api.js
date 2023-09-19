@@ -7,7 +7,7 @@ class Category_Api extends Api{
 
     async getItemsNews(){
         const { type, limit } = this.req.query
-        const data = await Category_Models.getItemsNews(type, parseInt(limit));
+        const data = await Category_Models.getItemsNews(type, parseInt(limit??10));
         for (let index = 0; index < data.length; index++) {
             const element = data[index];
             for (let j = 0; j < element['Posts'].length; j++) {

@@ -24,6 +24,8 @@ class Category_Models extends Models{
                             slug: true, 
                             avatar: true, 
                             description: true,
+                            price: true,
+                            linkRegister: true,
                             created: true 
                         }}
                     ],
