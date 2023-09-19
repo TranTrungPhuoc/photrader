@@ -64,6 +64,8 @@ class Post_Controllers extends Controllers{
             { title: 'Slug', type: 'text', col: 6, class: 'slug form-control ', id: 'slug', value: (data.length==0)?'':data[0]['slug'], placeholder: '', require: false, disabled: false, check: true, event: '' },
             { title: 'Danh Mục', type: 'select', col: 6, class: 'parentID form-control ', id: 'parentID', array: await this.category(), require: false, disabled: false, check: false, event: '' },
             { title: 'Video', type: 'text', col: 6, class: 'video form-control ', id: 'video', value: (data.length==0)?'':data[0]['video'], placeholder: '', require: false, disabled: false, check: false, event: '' },
+            { title: 'Giá', type: 'number', col: 6, class: 'price form-control ', id: 'price', value: (data.length==0)?'':data[0]['price'], placeholder: '', require: false, disabled: false, check: false, event: '' },
+            { title: 'Link Đăng Ký', type: 'text', col: 6, class: 'linkRegister form-control ', id: 'linkRegister', value: (data.length==0)?'':data[0]['linkRegister'], placeholder: '', require: false, disabled: false, check: false, event: '' },
             { title: 'Mô tả', type: 'textarea', col: 12, class: 'description form-control ', id: 'description', value: (data.length==0)?'':data[0]['description'], placeholder: '', row: 3, check: false },
             { title: 'Nội Dung', type: 'ckeditor', col: 12, class: 'content form-control ', id: 'content', value: (data.length==0)?'':data[0]['content'], placeholder: '', row: 3, check: false },
             { title: 'Canonical', type: 'text', col: 6, class: 'canonical form-control ', id: 'canonical', value: (data.length==0)?'':data[0]['canonical'], placeholder: '', require: false, disabled: false, check: false, event: '' },

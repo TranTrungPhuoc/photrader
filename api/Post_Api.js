@@ -77,16 +77,16 @@ class Post_Api extends Api{
         })
     }
     async getDetailSlug(){
-        const html = '<div><h1>Hello, World!</h1><p>Example paragraph</p></div>';
-        const $ = cheerio.load(html);
+        // const html = '<div><h1>Hello, World!</h1><p>Example paragraph</p></div>';
+        // const $ = cheerio.load(html);
 
-        const title = $('h1').text();
-        console.log(title); // Output: "Hello, World!"
+        // const title = $('h1').text();
+        // console.log(title); // Output: "Hello, World!"
 
-        // Example: Traverse and manipulate the DOM
-        $('p').text('Updated paragraph');
-        console.log($.html());
-        return
+        // // Example: Traverse and manipulate the DOM
+        // $('p').text('Updated paragraph');
+        // console.log($.html());
+        // return
 
         const {slug} = this.req.params
         if(slug == undefined || slug.trim() == ''){
