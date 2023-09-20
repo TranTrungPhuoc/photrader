@@ -1,5 +1,6 @@
 const Models = require('../helpers/Models')
 const Schema = require('../schemas/Category_Schema')
+const Post_Schema = require('../schemas/Post_Schema')
 class Category_Models extends Models{
     constructor(table){
         super(table)
@@ -65,7 +66,7 @@ class Category_Models extends Models{
         ])
     }
 
-    async getItemsDetail(slug){
+    async getItemsDetail(slug, page, limit){
         return await this.table.aggregate([
             { $match: {slug} },
             {
@@ -76,6 +77,8 @@ class Category_Models extends Models{
                     foreignField: 'parentID',
                     pipeline: [
                         {$sort: {created: -1}},
+                        {$skip: page},
+                        {$limit: limit},
                         {$project: { title: true, slug: true, avatar: true, description: true }}
                     ],
                     as: 'Posts'
@@ -83,6 +86,10 @@ class Category_Models extends Models{
             },
             {$project: { title: true, slug: true, Posts: true }}
         ])
+    }
+
+    async getTotalItemsDetail(parentID){
+        return await Post_Schema.countDocuments({parentID}).exec();
     }
 
     async getViewMore(slug){

@@ -41,7 +41,8 @@ class Category_Api extends Api{
 
     async getItemsDetail(){
         const { slug } = this.req.params
-        const data = await Category_Models.getItemsDetail(slug);
+        const { page, limit } = this.req.query
+        const data = await Category_Models.getItemsDetail(slug, parseInt(page?(page==1?0:page):0), parseInt(limit??16));
         for (let index = 0; index < data.length; index++) {
             const element = data[index];
             for (let j = 0; j < element['Posts'].length; j++) {
@@ -49,10 +50,11 @@ class Category_Api extends Api{
                 element2['avatar'] = element2['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/post/' + element2['avatar']:'';
             }
         }
+        const count = await Category_Models.getTotalItemsDetail(data[0]._id)
         return this.res.send({
             code: 200,
             message: "Success",
-            response: data
+            response: { total: count, data }
         })
     }
 
