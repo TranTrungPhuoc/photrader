@@ -77,9 +77,9 @@ class Category_Models extends Models{
                     foreignField: 'parentID',
                     pipeline: [
                         {$sort: {created: -1}},
-                        {$skip: page},
+                        {$skip: page!=0?(page+limit):0},
                         {$limit: limit},
-                        {$project: { title: true, slug: true, avatar: true, description: true }}
+                        {$project: { title: true, slug: true, avatar: true, description: true, created: true }}
                     ],
                     as: 'Posts'
                 }

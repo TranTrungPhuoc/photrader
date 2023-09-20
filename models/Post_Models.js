@@ -22,7 +22,7 @@ class Post_Models extends Models{
                             {$match: {slug: {$ne: slug}}},
                             {$sort: {created: -1}},
                             {$limit: 7},
-                            {$project: { title: true, slug: true, avatar: true, description: true }}
+                            {$project: { title: true, slug: true, avatar: true, description: true, created: true }}
                         ],
                         as: 'Posts'
                     }
