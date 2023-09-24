@@ -37,9 +37,10 @@ class Category_Models extends Models{
         ])
     }
 
-    async getItemsHome(type, limit){
+    async getItemsHome(type, limit, sort){
         return await this.table.aggregate([
             { $match: {type, status: true} },
+            { $sort: {_id: sort} },
             {
                 $lookup:
                 {
@@ -57,6 +58,36 @@ class Category_Models extends Models{
                             avatar: true, 
                             view: true, 
                             description: true 
+                        }}
+                    ],
+                    as: 'Posts'
+                }
+            },
+            {$project: { title: true, slug: true, Posts: true }}
+        ])
+    }
+
+    async getItemsRelative(type, slug, limit){
+        return await this.table.aggregate([
+            { $match: {type, status: true, slug: {$ne: slug}} },
+            {
+                $lookup:
+                {
+                    from: 'posts',
+                    localField: '_id',
+                    foreignField: 'parentID',
+                    pipeline: [
+                        { $match: {status: true} },
+                        { $sort: {view: -1} },
+                        { $limit: parseInt(limit) },
+                        { $project: { 
+                            title: true, 
+                            slug: true, 
+                            video: true, 
+                            avatar: true, 
+                            view: true, 
+                            description: true,
+                            created: true
                         }}
                     ],
                     as: 'Posts'
@@ -84,7 +115,7 @@ class Category_Models extends Models{
                     as: 'Posts'
                 }
             },
-            {$project: { title: true, slug: true, Posts: true }}
+            {$project: { title: true, slug: true, type: true, Posts: true }}
         ])
     }
 

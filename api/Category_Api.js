@@ -23,8 +23,9 @@ class Category_Api extends Api{
     }
 
     async getItemsHome(){
-        const { type, limit } = this.req.query
-        const data = await Category_Models.getItemsHome(type, parseInt(limit));
+        const { type, limit, sort } = this.req.query
+        const limitDefault = parseInt(limit??10)
+        const data = await Category_Models.getItemsHome(type, limitDefault, sort?parseInt(sort):1);
         for (let index = 0; index < data.length; index++) {
             const element = data[index];
             for (let j = 0; j < element['Posts'].length; j++) {
@@ -36,6 +37,27 @@ class Category_Api extends Api{
             code: 200,
             message: "Success",
             response: data
+        })
+    }
+
+    async getItemsRelative(){
+        const { slug } = this.req.params
+        const { type, limit } = this.req.query
+        const limitDefault = parseInt(limit??20)
+        const data = await Category_Models.getItemsRelative(type, slug, limitDefault);
+        const response = []
+        for (let index = 0; index < data.length; index++) {
+            const element = data[index];
+            for (let j = 0; j < element['Posts'].length; j++) {
+                const element2 = element['Posts'][j];
+                element2['avatar'] = element2['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/post/' + element2['avatar']:'';
+            }
+            response.push(...element['Posts'])
+        }
+        return this.res.send({
+            code: 200,
+            message: "Success",
+            response
         })
     }
 
